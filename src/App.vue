@@ -86,6 +86,7 @@
     }
     .btn.boton-principal{
         background-color: var(--color-principal);
+        border-color: var(--color-principal);
     }
     .btn.boton-principal:hover{
         opacity: .92;
@@ -238,6 +239,10 @@
         color: #fff;
         background-color: var(--color-principal);
         border-color: var(--color-principal);
+    }
+    /* Mensaje de error*/
+    .mensaje-error{
+        color: var(--color-error)
     }
 
     /*extra*/
