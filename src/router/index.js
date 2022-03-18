@@ -1,29 +1,48 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import store from '../store'
+
+import { AutenticacionRoutes } from '@/modules/autenticacion/routes.js'
+import { SistemaRoutes } from '@/modules/sistema/routes.js'
+
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    {
+        path: '/',
+        redirect: {name: 'IniciarSesion'}
+    },
+    ...AutenticacionRoutes,
+    ...SistemaRoutes,
+    { 
+        path: '/:catchAll(.*)', 
+        name: 'Error',
+        redirect: {name: 'ErrorSistema'},
+    },
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiereAutenticacion)) 
+    {
+        if (store.state.autenticacion.autenticado) 
+        {
+            next();
+        } 
+        else 
+        {
+            next({ name: "IniciarSesion" });
+        }
+    } else 
+    {
+        next();
+    }
+});
 
 export default router
