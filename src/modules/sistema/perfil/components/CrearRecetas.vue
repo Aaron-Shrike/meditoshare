@@ -10,29 +10,33 @@
             </b-button>
         </div>
 
-        <b-table class="tabla-recetas" small :fields="columnasTabla" :items="datosPrueba" responsive="sm">
-            <template #cell(descripcion)="">
-                <!-- {{ data.item.descripcion }} -->
+        <b-table v-if="datos.length == 0" class="tabla-recetas" small :fields="columnasTabla" :items="datosPrueba" responsive="sm">
+            <template #cell(nombreReceta)="">
+                <!-- {{ data.item.nombreReceta }} -->
                 <p class="mensaje-error mb-0">* {{mensajeError}} *</p>
-            </template>
-
-            <template #cell(acciones)="">
-                
             </template>
         </b-table>
 
-        <b-table class="tabla-recetas" small :fields="columnasTabla" :items="datos" responsive="sm">
-            <template #cell(descripcion)="data">
-                {{ data.item.descripcion }}
+        <b-table v-else class="tabla-recetas" small :fields="columnasTabla" :items="datos" responsive="sm">
+            <template #cell(nombreReceta)="data">
+                {{ data.item.nombreReceta }}
             </template>
 
             <template #cell(acciones)="data">
-                <b-button
-                    class="boton-principal"
-                    @click="MostrarArchivo(data.item.url_receta)"
-                >
-                    Ver
-                </b-button>
+                <div class="d-flex justify-content-around">
+                    <b-button
+                        class="boton-principal"
+                        @click="MostrarArchivo(data.item.nombreReceta, data.item.urlReceta)"
+                    >
+                        Ver
+                    </b-button>
+                    <b-button
+                        class="boton-principal"
+                        @click="EliminarReceta(data.item.codigoReceta, data.item.urlReceta)"
+                    >
+                        Borrar
+                    </b-button>
+                </div>
             </template>
         </b-table>
 
@@ -42,8 +46,6 @@
             v-model="mostrarModal"
             ref="modal"
             title="Registrar receta"
-            ok-title="Registrar"
-            cancel-title="Cerrar"
             @show="LimpiarFormulario"
             @hidden="LimpiarFormulario"
             @ok="EnviarDatos"
@@ -52,7 +54,7 @@
             hide-header-close
         >
             <!-- <form ref="form" @submit.stop.prevent="EnviarDatos"> -->
-            <form ref="form">
+            <form ref="form" enctype="multipart/form-data">
                 <b-form-group
                     id="input-group-1"
                     label="Nombre:"
@@ -102,11 +104,39 @@
                             Debe subir un archivo
                         </div>
                         <div v-if="!$v.datosReceta.archivo.esImagen">
-                            Archivo no valido
+                            Archivo no válido
                         </div>
                     </b-form-invalid-feedback>
                 </b-form-group>
             </form>
+
+            <template #modal-footer="{ ok, cancel }">
+                <b-overlay
+                    :show="efectoCargandoBoton"
+                    rounded
+                    opacity="0.6"
+                >
+                    <b-button class="boton-principal" @click="ok()">
+                        Registrar
+                    </b-button>
+                </b-overlay>
+                <b-button variant="danger" @click="cancel()">
+                    Cerrar
+                </b-button>
+            </template>
+        </b-modal>
+
+        <!-- MOSTRAR RECETA -->
+        <b-modal 
+            id="modal-lg" 
+            size="lg" 
+            :title="nombreReceta"
+            centered
+            v-model="mostrarModalArchivo"
+            no-close-on-esc
+            hide-footer
+        >
+            <b-img :src="urlReceta" fluid-grow></b-img>
         </b-modal>
     </div>
 </template>
@@ -122,7 +152,6 @@ const esImagen = (value) => {
     {
         return false
     }
-    
 }
 import { mapState } from 'vuex'
 import axios from 'axios'
@@ -130,23 +159,26 @@ import axios from 'axios'
 export default {
     name: "RecetasComponente",
     data: () =>  ({
-        mensajeError: '',
+        mensajeError: 'No tiene recetas registradas.',
         efectoCargandoBoton: false,
         mostrarModal: false,
+        mostrarModalArchivo: false,
+        nombreReceta: '',
+        urlReceta: '',
         datosReceta: {
             nombre: '',
             archivo: null,
         },
 		columnasTabla: [
-            'descripcion',
+            'nombreReceta',
             'acciones',
         ],
         datos: [
-            // { id_receta: '1', descripcion: 'paracetamol', url_receta: 'paracetamol'},
-            // { id_receta: '2', descripcion: 'paracetamol2', url_receta: 'paracetamol'},
+            // { idReceta: '1', nombreReceta: 'paracetamol', urlReceta: 'paracetamol'},
+            // { idReceta: '2', nombreReceta: 'paracetamol2', urlReceta: 'paracetamol'},
         ],
         datosPrueba: [
-            { id_receta: '1', descripcion: '', url_receta: ''},
+            { idReceta: '1', nombreReceta: '', urlReceta: ''},
         ],
 	}),
     computed:{
@@ -163,12 +195,16 @@ export default {
 		},
         ObtenerDatos()
         {
-            axios.post('/api/obtener-recetas-usuario', this.$route.params.dni)
+            let datos = {
+                dni: this.usuario.dni
+            }
+            
+            axios.post('/api/obtener-recetas', datos)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data
 
-                    if(respuesta.status == 200 && typeof data.error === 'undefined')
+                    if(respuesta.status == 200 && data.length != 0)
                     {
                         this.datos = data
                     }
@@ -182,13 +218,27 @@ export default {
                     this.mensajeError = "Error al conectar al servidor."
                 })
         },
-        MostrarArchivo(url)
+        MostrarArchivo(Nombre, url)
         {
-            console.log(url)
+            this.mostrarModalArchivo = true
+            this.nombreReceta = Nombre
+            this.urlReceta = process.env.VUE_APP_API_URL + "/recetas/" + this.usuario.dni + "/" + url
+        },
+        DatosFormulario()
+        {
+            let data = new FormData()
+
+            data.append('nombre', this.datosReceta.nombre)
+            data.append('archivo', this.datosReceta.archivo)
+            data.append('dniUsuario', this.usuario.dni)
+
+            return data
         },
         EnviarDatos(bvModalEvt)
         {
             bvModalEvt.preventDefault()
+
+            console.log(this.datosReceta)
 
             this.$v.datosReceta.$touch();
 
@@ -196,20 +246,29 @@ export default {
 			{ 
                 this.efectoCargandoBoton = true
 
-                let receta = this.datosReceta;
+                let datos = this.DatosFormulario()
 
-                axios.post('/api/crear-receta', receta)
+                axios.post('/api/crear-receta', datos)
                     .then((respuesta) => 
                     {
                         let data = respuesta.data
 
                         if(respuesta.status == 200 && typeof data.error === 'undefined')
                         {
-                            this.MensajeDeExito("Se registro correctamente.")
+                            let nuevaReceta = {
+                                nombreReceta: this.datosReceta.nombre,
+                                urlReceta: data.urlReceta,
+                            }
+                            //agregar receta a la tabla
+                            this.datos.push(nuevaReceta)
+                            this.MensajeDeExito("Su receta se registro correctamente.")
+                            this.LimpiarFormulario()
+
+
                             // Hide the modal manually
-                            this.$nextTick(() => {
-                            this.$bvModal.hide('modal-prevent-closing')
-                            })
+                            // this.$nextTick(() => {
+                            //     this.$bvModal.hide('modal-prevent-closing')
+                            // })
                         }
                         else
                         {
@@ -224,6 +283,43 @@ export default {
                         this.efectoCargandoBoton = false
                     });
 			}
+        },
+        EliminarReceta(codigo, url)
+        {
+            let datos = {
+                codigoReceta: codigo,
+                dniUsuario: this.usuario.dni,
+                urlArchivo: url,
+            }
+
+            axios.post('/api/borrar-receta', datos)
+                .then((respuesta) => 
+                {
+                    let data = respuesta.data
+
+                    if(respuesta.status == 200 && typeof data.error === 'undefined')
+                    {
+                        //eliminar receta a la tabla
+                        let index = -1
+                        this.datos.forEach((e, i) => {
+                            if(e.codigoReceta == datos.codigoReceta)
+                            {
+                                index = i
+                            }
+                        })
+
+                        this.datos.splice(index,1)
+                        this.MensajeDeExito("Su receta se elimino correctamente.")
+                    }
+                    else
+                    {
+                        this.MensajeDeError(data.mensaje)
+                    }
+                })
+                .catch(() => 
+                {
+                    this.MensajeDeError()
+                })
         },
         LimpiarFormulario() 
         {
@@ -255,7 +351,7 @@ export default {
 			nombre: {
 				required,
 				minLength: minLength(3),
-				maxLength: maxLength(40)
+				maxLength: maxLength(70)
 			},
 			archivo: {
 				required,

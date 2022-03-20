@@ -122,7 +122,7 @@ export default {
 		efectoCargandoBoton: false,
 		form: {
 			dni: '12345671',
-			contrasenia: '1234',
+			contrasenia: '12345678',
 		},
 	}),
 	validations: {
@@ -166,7 +166,7 @@ export default {
 								if(respuesta.status == 200 && typeof data.error === 'undefined')
 								{
 									this.EditarIniciarSesion(data)
-									this.$router.push({ name: "Sistema"})	
+									this.$router.push({ name: "InicioSistema"})	
 								}
 								else
 								{

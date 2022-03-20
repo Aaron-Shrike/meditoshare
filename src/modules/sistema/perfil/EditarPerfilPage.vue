@@ -14,7 +14,7 @@
                         <p class="mb-4"><b>Fecha de nacimiento:</b> {{usuario.formatoFechaNacimiento}}</p>
                     </div>
                     <b-form @submit.prevent="EnviarDatosUsuario">
-                        <b-row cols="1" cols-lg="2" cols-xl="3">
+                        <b-row cols="1" cols-lg="2">
                             <b-col class="form-datos-contacto">
                                 <h4 class="text-center">Datos de Contacto</h4>
                                 <b-form-group
