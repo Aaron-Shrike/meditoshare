@@ -54,12 +54,9 @@ import CrearRecetas from '@/modules/sistema/perfil/components/CrearRecetas.vue'
 import CrearDiagnosticos from '@/modules/sistema/perfil/components/CrearDiagnosticos.vue'
 
 import { mapState } from 'vuex'
-// import axios from 'axios'
 
 export default {
     data: () =>  ({
-        efectoCargando: false,
-		datosUsuario: {}
 	}),
     components: {
         CrearRecetas,
@@ -68,32 +65,8 @@ export default {
     computed:{
         ...mapState('autenticacion', ['usuario']),
     },
-    beforeMount(){
-        // this.ObtenerDatosUsuario(this.$route.params.dni)
-    },
     methods: {
-        // ObtenerDatosUsuario(dni)
-        // {
-        //     axios.post('/api/obtener-datos-usuario', dni)
-        //         .then((respuesta) => 
-        //         {
-        //             let data = respuesta.data
-
-        //             if(respuesta.status == 200 && typeof data.error === 'undefined')
-        //             {
-        //                 this.datosUsuario = data
-        //                 this.efectoCargando = false
-        //             }
-        //             else
-        //             {
-        //                 // this.$router.push({ name: "InicioSistema"})
-        //             }
-        //         })
-        //         .catch(() => 
-        //         {
-        //             // this.$router.push({ name: "InicioSistema"})
-        //         })
-        // }
+        
     }
 }
 </script>

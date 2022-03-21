@@ -5,10 +5,10 @@ export const AutenticacionStore = {
         autenticado: true,
         // usuario: {},
         usuario: {
-            nombre: 'Aarón',
+            nombre: 'Local',
             apellidoPaterno: 'Rojas',
             apellidoMaterno: 'Vera',
-			dni: '12345671',
+			dni: '12345672',
             fechaNacimiento: '2000-12-23',
             formatoFechaNacimiento: '23/12/2000',
 

@@ -218,10 +218,10 @@ export default {
                     this.mensajeError = "Error al conectar al servidor."
                 })
         },
-        MostrarArchivo(Nombre, url)
+        MostrarArchivo(nombre, url)
         {
             this.mostrarModalArchivo = true
-            this.nombreReceta = Nombre
+            this.nombreReceta = nombre
             this.urlReceta = process.env.VUE_APP_API_URL + "/recetas/" + this.usuario.dni + "/" + url
         },
         DatosFormulario()
@@ -256,6 +256,7 @@ export default {
                         if(respuesta.status == 200 && typeof data.error === 'undefined')
                         {
                             let nuevaReceta = {
+                                codigoReceta: data.codigoReceta,
                                 nombreReceta: this.datosReceta.nombre,
                                 urlReceta: data.urlReceta,
                             }

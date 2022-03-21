@@ -121,7 +121,7 @@ export default {
 	data: () =>  ({
 		efectoCargandoBoton: false,
 		form: {
-			dni: '12345671',
+			dni: '12345672',
 			contrasenia: '12345678',
 		},
 	}),

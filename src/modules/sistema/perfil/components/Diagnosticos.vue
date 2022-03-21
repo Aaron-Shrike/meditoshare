@@ -3,56 +3,72 @@
         <h3>Diagnosticos médicos</h3>
         <p class="mensaje-error" v-if="datos.length == 0">* {{mensajeError}} *</p>
         <b-table class="tabla-recetas" v-else small :fields="columnasTabla" :items="datos" responsive="sm">
-            <template #cell(descripcion)="data">
-                {{ data.item.descripcion }}
+            <template #cell(nombre)="data">
+                {{ data.item.nombreDiagnostico }}
             </template>
 
             <template #cell(acciones)="data">
                 <b-button
                     class="boton-principal"
-                    @click="MostrarArchivo(data.item.url_diagnostico)"
+                    @click="MostrarArchivo(data.item.nombreDiagnostico, data.item.urlDiagnostico)"
                 >
                     Ver
                 </b-button>
             </template>
         </b-table>
+
+        <!-- MOSTRAR DIAGNOSTICO -->
+        <b-modal 
+            id="modal-lg" 
+            size="lg" 
+            :title="nombreDiagnostico"
+            centered
+            v-model="mostrarModalArchivo"
+            no-close-on-esc
+            hide-footer
+        >
+            <b-img :src="urlDiagnostico" fluid-grow></b-img>
+        </b-modal>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
     name: "DiagnosticoComponente",
     data: () =>  ({
         mensajeError: '',
+        mostrarModalArchivo: false,
+        nombreDiagnostico: '',
+        urlDiagnostico: '',
 		columnasTabla: [
-            'descripcion',
+            'nombre',
             'acciones',
         ],
         datos: [
-            // { id_receta: '1', descripcion: 'paracetamol', url_diagnostico: 'paracetamol'},
-            // { id_receta: '2', descripcion: 'paracetamol2', url_diagnostico: 'paracetamol'},
-            // { id_receta: '3', descripcion: 'paracetamol3', url_diagnostico: 'paracetamol'},
-            // { id_receta: '4', descripcion: 'paracetamol4', url_diagnostico: 'paracetamol'},
+            // { nombreDiagnostico: 'paracetamol', urlDiagnostico: 'paracetamol'},
+            // { nombreDiagnostico: 'paracetamol2', urlDiagnostico: 'paracetamol'},
+            // { nombreDiagnostico: 'paracetamol3', urlDiagnostico: 'paracetamol'},
+            // { nombreDiagnostico: 'paracetamol4', urlDiagnostico: 'paracetamol'},
         ]
 	}),
-    computed:{
-        ...mapState('autenticacion', ['usuario']),
-    },
     beforeMount() {
         this.ObtenerDatos()
     },
     methods: {
         ObtenerDatos()
         {
-            axios.post('/api/obtener-diagnosticos-usuario', this.$route.params.dni)
+            let datos = {
+                dni: this.$route.params.dni,
+            }
+            
+            axios.post('/api/obtener-diagnosticos-solicitante', datos)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data
 
-                    if(respuesta.status == 200 && typeof data.error === 'undefined')
+                    if(respuesta.status == 200 && data.length != 0)
                     {
                         this.datos = data
                     }
@@ -66,9 +82,11 @@ export default {
                     this.mensajeError = "Error al conectar al servidor."
                 })
         },
-        MostrarArchivo(url)
+        MostrarArchivo(nombre, url)
         {
-            console.log(url)
+            this.mostrarModalArchivo = true
+            this.nombreDiagnostico = nombre
+            this.urlDiagnostico = process.env.VUE_APP_API_URL + "/diagnosticos/" + this.$route.params.dni + "/" + url
         },
     }
 }
