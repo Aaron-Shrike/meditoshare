@@ -28,32 +28,32 @@ export default {
         estrellasCompletas: 0,
         estrellasVacias: 0,
         estrellaMedia: false,
-        calificacionPromedio: '5',
+        calificacionPromedio: '0',
 		lista: [
-            {
-                dniSolicitante: '12345678',
-                codigoAnuncio: '1',
-                puntaje: '1',
-                comentario: 'muy malo',
-                nombre: 'Usuario',
-                apellidoPaterno: '1'
-            },
-            {
-                dniSolicitante: '12345678',
-                codigoAnuncio: '2',
-                puntaje: '1',
-                comentario: 'muy malo',
-                nombre: 'Usuario',
-                apellidoPaterno: '1'
-            },
-            {
-                dniSolicitante: '12345678',
-                codigoAnuncio: '3',
-                puntaje: '1',
-                comentario: 'muy malo',
-                nombre: 'Usuario',
-                apellidoPaterno: '1'
-            },
+            // {
+            //     dniSolicitante: '12345678',
+            //     codigoAnuncio: '1',
+            //     puntaje: '1',
+            //     comentario: 'muy malo',
+            //     nombre: 'Usuario',
+            //     apellidoPaterno: '1'
+            // },
+            // {
+            //     dniSolicitante: '12345678',
+            //     codigoAnuncio: '2',
+            //     puntaje: '1',
+            //     comentario: 'muy malo',
+            //     nombre: 'Usuario',
+            //     apellidoPaterno: '1'
+            // },
+            // {
+            //     dniSolicitante: '12345678',
+            //     codigoAnuncio: '3',
+            //     puntaje: '1',
+            //     comentario: 'muy malo',
+            //     nombre: 'Usuario',
+            //     apellidoPaterno: '1'
+            // },
         ],
 	}),
     components: {
@@ -66,12 +66,16 @@ export default {
     methods: {
         ObtenerDatos()
         {
-            axios.post('/api/obtener-calificaciones-usuario', this.$route.params.dni)
+            let datos = {
+                dniSolicitante: this.$route.params.dni,
+            }
+
+            axios.post('/api/obtener-calificaciones-solicitante', datos)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data
 
-                    if(respuesta.status == 200 && typeof data.error === 'undefined')
+                    if(respuesta.status == 200 && data.calificaciones.length != 0)
                     {
                         this.lista = data.calificaciones
                         this.calificacionPromedio = data.calificacionPromedio

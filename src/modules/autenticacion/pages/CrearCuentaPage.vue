@@ -566,8 +566,8 @@ export default {
                         let departamentos = []
                         data.forEach(element => {
                             let obj = {
-                                value: element.id_departamento, 
-                                text: element.descripcion
+                                value: element.codigoDepartamento, 
+                                text: element.departamento
                             }
                             departamentos.push(obj)
                         });
@@ -595,8 +595,8 @@ export default {
                         let array = []
                         data.forEach(element => {
                             let obj = {
-                                value: element.id_provincia, 
-                                text: element.descripcion
+                                value: element.codigoProvincia, 
+                                text: element.provincia
                             }
                             array.push(obj)
                         });
@@ -624,8 +624,8 @@ export default {
                         let array = []
                         data.forEach(element => {
                             let obj = {
-                                value: element.id_distrito, 
-                                text: element.descripcion
+                                value: element.codigoDistrito, 
+                                text: element.distrito
                             }
                             array.push(obj)
                         });

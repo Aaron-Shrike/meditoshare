@@ -5,9 +5,9 @@
         class="card-formulario"
     >
         <b-card-body>
-            <div class="d-flex justify-content-between align-items-center">
-                <b-card-title>{{datos.nombre}} {{datos.apellidoPaterno}}</b-card-title>
-                <p>{{datos.puntaje}} <b-icon icon="star-fill"></b-icon></p>
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <b-card-title class="mb-0">{{datos.nombre}} {{datos.apellidoPaterno}}</b-card-title>
+                <p class="mb-0">{{datos.puntaje}} <b-icon icon="star-fill"></b-icon></p>
             </div>
             <b-card-text>
                 {{datos.comentario}}

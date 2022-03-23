@@ -6,7 +6,7 @@ import VerificacionesPerfilPage from '@/modules/sistema/perfil/VerificacionesPer
 import EditarPerfilPage from '@/modules/sistema/perfil/EditarPerfilPage.vue'
 import PerfilUsuarioPage from '@/modules/sistema/perfil/PerfilUsuarioPage.vue'
 
-import CrearAnuncioPage from '@/modules/sistema/pages/CrearAnuncioPage.vue'
+import CrearAnuncioPage from '@/modules/sistema/anuncios/CrearAnuncioPage.vue'
 import SolicitudesPage from '@/modules/sistema/pages/SolicitudesPage.vue'
 
 import AnunciosPage from '@/modules/sistema/anuncios/AnunciosPage.vue'
