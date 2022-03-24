@@ -135,7 +135,6 @@
                                         :state="EstadoValidacion('cantidad')"
                                         placeholder="Cantidad"
                                         min="1"
-                                        step="4"
                                     ></b-form-input>
                                     <b-form-invalid-feedback
                                         id="input-5-live-feedback"
@@ -323,6 +322,7 @@ export default {
                         if(respuesta.status == 200 && typeof data.error === 'undefined')
                         {
                             this.MensajeDeExito("Nuevo anuncio guardado.")
+                            this.LimpiarDatosAnuncio()
                         }
                         else
                         {
@@ -338,29 +338,21 @@ export default {
                     });
 			}
 		},
-        ObtenerDatosUsuario()
+        LimpiarDatosAnuncio()
         {
-            axios.post('/api/obtener-datos-usuario', this.usuario.dni)
-                .then((respuesta) => 
-                {
-                    let data = respuesta.data
+            this.$v.datosAnuncio.$reset()
 
-                    if(respuesta.status == 200 && typeof data.error === 'undefined')
-                    {
-                        this.EditarIniciarSesion(data)
-                    }
-                    else
-                    {
-                        this.MensajeDeError(data.mensaje)
-                    }
-                })
-                .catch(() => 
-                {
-                    this.MensajeDeError()
-                })
-                .finally(() => {
-                    this.efectoCargandoBoton = false
-                });
+            this.datosAnuncio = {
+                dniDonante: '',
+                nombre: '',
+                descripcion: '',
+                concentracion: '',
+                presentacion: '',
+                cantidad: '',
+                requiereReceta: false,
+                requiereDiagnostico: false,
+                fechaVencimiento: null,
+            }
         },
 		MensajeDeError(mensaje = 'Error al conectar al servidor.')
 		{
@@ -370,25 +362,13 @@ export default {
 				confirmButtonText: 'Aceptar',
 			})
 		},
-        MensajeDeAviso(mensaje)
-        {
-			this.$swal({
-				title: mensaje,
-				icon: 'info',
-				confirmButtonText: 'Aceptar',
-			})
-		},
         MensajeDeExito(mensaje)
         {
 			this.$swal({
 				title: mensaje,
 				icon: 'success',
 				confirmButtonText: 'Aceptar',
-			}).then((result) => {
-                if (result.isConfirmed) {
-                    this.$router.push({ name: "Perfil"})	
-                }
-            })
+			})
 		},
 	},
     validations: {

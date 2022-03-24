@@ -8,7 +8,7 @@ export const AutenticacionStore = {
             nombre: 'Local',
             apellidoPaterno: 'Rojas',
             apellidoMaterno: 'Vera',
-			dni: '12345672',
+			dni: '12345671',
             fechaNacimiento: '2000-12-23',
             formatoFechaNacimiento: '23/12/2000',
 

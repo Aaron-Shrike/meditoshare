@@ -216,12 +216,17 @@ export default {
 	}
 
 	.card.card-formulario,
-	.card-formulario{
+	.card.card-anuncio{
 		background-color: var(--color-blanco);
-		box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
 		border-radius: var(--redondeado-1);
 		border: 0;
 		margin: 0 auto;
+	}
+	.card.card-formulario{
+		box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
+	}
+	.card.card-anuncio{
+		box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.1);
 	}
 	.card-formulario-ancho{
 		max-width: 465px;
@@ -229,6 +234,10 @@ export default {
 	}
 	.card-formulario .card-body{
 		padding: 30px;
+	}
+
+	.card-anuncio .card-body{
+		padding: 25px 30px;
 	}
 
 	h2.titulo-formulario{

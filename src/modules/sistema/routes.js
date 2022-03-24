@@ -1,4 +1,6 @@
 import Sistema from '@/modules/sistema/Sistema.vue'
+
+import ErrorSistemaPage from '@/modules/sistema/pages/ErrorSistemaPage.vue'
 import InicioPage from '@/modules/sistema/pages/InicioPage.vue'
 
 import PerfilPage from '@/modules/sistema/perfil/PerfilPage.vue'
@@ -16,6 +18,11 @@ export const SistemaRoutes = [
         path: '/',
         component: Sistema,
         children: [
+            { 
+                path: '404', 
+                name: 'ErrorSistema',
+                component: ErrorSistemaPage
+            },
             { 
                 path: 'inicio', 
                 name: 'InicioSistema',

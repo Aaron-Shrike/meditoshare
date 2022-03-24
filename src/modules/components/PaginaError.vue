@@ -8,7 +8,7 @@
             <p>Oops... Página no encontrada</p>
             <b-button
                 class="boton boton-principal"
-                :to="{name: 'Sistema'}"
+                :to="{name: 'InicioSistema'}"
                 exact
             >
                 Inicio

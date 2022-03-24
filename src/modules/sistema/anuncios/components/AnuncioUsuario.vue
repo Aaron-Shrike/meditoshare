@@ -1,21 +1,21 @@
 <template>
     <b-card
         no-body
-        class="card-anuncio"
+        class="card-formulario"
     >
         <b-card-body>
             <b-card-title>{{datos.nombre}} <small>{{datos.presentacion}}, {{datos.concentracion}}</small></b-card-title>
-
+            
             <b-card-text>
-                <b-row cols="1" cols-sm="2">
+                <b-row cols="1" cols-sm="2" cols-lg="4">
                     <b-col v-if="datos.descripcion != null && datos.descripcion != ''">
-                        <p class="mb-1">Descripción: {{datos.descripcion}}</p>
+                        <p class="mb-1 mb-lg-0">Descripción: {{datos.descripcion}}</p>
                     </b-col>
                     <b-col>
                         <p class="mb-0">
                             <b-icon icon="calendar2-event"></b-icon> Vence: {{datos.formatoFechaVencimiento}}
                         </p>
-                        <p class="mb-1">
+                        <p class="mb-1 mb-lg-0">
                             <b-icon icon="box-seam"></b-icon> {{datos.cantidad}} {{datos.presentacion}}
                         </p>
                     </b-col>
@@ -33,8 +33,8 @@
                             <b-icon icon="x-square"></b-icon> No requiere diagnostico
                         </p>
                     </b-col>
-                    <b-col :class="{'fila-completa': filaCompleta}" cols="12">
-                        <p class="mb-0 mt-1">
+                    <b-col>
+                        <p class="mb-0 mt-1 mt-lg-0">
                             <b-icon icon="calendar-check"></b-icon> Publicado: {{datos.formatoFechaAnuncio}}
                         </p>
                         <p class="mb-0">
@@ -43,30 +43,42 @@
                     </b-col>
                 </b-row>
             </b-card-text>
-
-            <!-- <b-list-group flush>
-                <b-list-group-item>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                </b-list-group-item>
-            </b-list-group> -->
         </b-card-body>
 
         <b-card-footer class="px-3 py-2">
-            <b-row cols="1" align-v="center" align-h="center">
-                <b-col class="d-md-flex justify-content-end">
+            <b-row cols="1" cols-lg="3" align-v="center" align-h="center">
+                <b-col v-if="datos.activo == 1 && anuncioActivo == true">
+                    <p v-if="datos.solicitudes > 0" class="mb-1 mb-lg-0">
+                        Tiene {{datos.solicitudes}} solicitudes. x aún están pendientes.
+                    </p>
+                    <p v-else class="mb-1 mb-lg-0">Aún no tiene solicitudes de contacto.</p>
+                </b-col>
+                <b-col v-else>
+                    <p class="mensaje-error mb-1 mb-lg-0">Anuncio finalizado.</p>
+                </b-col>
+                <b-col class="d-lg-flex justify-content-start">
+                    <b-button 
+                        block
+                        class="boton boton-principal mb-2 mb-lg-0"
+                        :to="{name: 'InicioSistema'}"
+                    >
+                        Ver solicitudes
+                    </b-button>
+                </b-col>
+                <b-col class="d-lg-flex justify-content-end">
                     <b-overlay
                         :show="efectoCargandoBoton"
                         rounded
                         opacity="0.6"
+                        v-if="datos.activo == 1 && anuncioActivo == true"
                     >
                         <b-button 
                             :disabled="efectoCargandoBoton"
                             block
                             class="boton boton-principal"
-                            @click="SolicitarMedicamento(datos.codigoAnuncio)"
+                            @click="ConfirmarFinalizarAnuncio(datos.codigoAnuncio)"
                         >
-                            Solicitar medicamento
+                            Finalizar anuncio
                         </b-button>
                     </b-overlay>
                 </b-col>
@@ -77,52 +89,49 @@
 
 <script>
 import axios from 'axios'
-import { mapState } from 'vuex'
 
 export default {
-    name: "AnuncioPublicoComponente",
+    name: "AnuncioUsuarioComponente",
     data: () =>  ({
         efectoCargandoBoton: false,
-		filaCompleta: false,
-        datosSolicitud: {
-            dniSolicitante: '',
-            codigoAnuncio: '',
-        }
+        anuncioActivo: null,
+        // anuncioFinalizado: false,
 	}),
     props: ['datos'],
-    computed:{
-        ...mapState('autenticacion', ['usuario']),
-    },
     mounted(){
-        if(this.datos.descripcion == null || this.datos.descripcion == ''){
-            this.filaCompleta = true
-        }
+        this.anuncioActivo = (this.datos.activo == 1) ? true : false
     },
     methods: {
-        SolicitarMedicamento(codigo)
+        ConfirmarFinalizarAnuncio(codigo)
         {
+            this.MensajeDeAviso("Desea finalizar su anuncio.", codigo)
+        },
+        FinalizarAnuncio(codigo)
+        {
+            let datos = {
+                codigoAnuncio: codigo
+            }
+
             this.efectoCargandoBoton = true
 
-            this.datosSolicitud.dniSolicitante = this.usuario.dni
-            this.datosSolicitud.codigoAnuncio = codigo
-
-            axios.post('/api/crear-solicitud', this.datosSolicitud)
+            axios.post('/api/finalizar-anuncio', datos)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data
 
                     if(respuesta.status == 200 && typeof data.error === 'undefined')
                     {
-                        this.MensajeDeExito("Su solicitud fue registrada.")
+                        this.MensajeDeExito("Su anuncio finalizo.")
+                        this.anuncioActivo = false
                     }
                     else
                     {
-                        this.MensajeDeError(data.mensaje);
+                        this.MensajeDeError();
                     }
                 })
                 .catch(() => 
                 {
-                    this.MensajeDeError()
+                    this.MensajeDeError();
                 })
                 .finally(() => {
                     this.efectoCargandoBoton = false
@@ -135,6 +144,20 @@ export default {
 				icon: 'error',
 				confirmButtonText: 'Aceptar',
 			})
+		},
+        MensajeDeAviso(mensaje, codigo)
+        {
+            this.$swal({
+				title: mensaje,
+				icon: 'info',
+				confirmButtonText: 'Sí',
+				cancelButtonText: 'Cerrar',
+                showCancelButton: true,
+			}).then((result) => {
+                if (result.isConfirmed) {
+                    this.FinalizarAnuncio(codigo)
+                }
+            })
 		},
         MensajeDeExito(mensaje)
         {
@@ -149,4 +172,8 @@ export default {
 </script>
 
 <style>
+    .fila-completa.col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 </style>

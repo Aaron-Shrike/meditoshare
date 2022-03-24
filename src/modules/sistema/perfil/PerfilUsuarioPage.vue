@@ -31,7 +31,7 @@
                         <diagnosticos></diagnosticos>
                     </b-col>
                 </b-row>
-                <calificaciones></calificaciones>
+                <calificaciones v-if="datosSolicitante.nombre != undefined"></calificaciones>
             </b-container>
         </div>
     </b-overlay>
@@ -81,12 +81,12 @@ export default {
                     }
                     else
                     {
-                        this.$router.push({ name: "InicioSistema"})
+                        this.$router.push({ name: "ErrorSistema"})
                     }
                 })
                 .catch(() => 
                 {
-                    this.$router.push({ name: "InicioSistema"})
+                    this.$router.push({ name: "ErrorSistema"})
                 })
         }
     }
