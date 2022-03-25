@@ -238,8 +238,6 @@ export default {
         {
             bvModalEvt.preventDefault()
 
-            console.log(this.datosReceta)
-
             this.$v.datosReceta.$touch();
 
 			if(!this.$v.datosReceta.$anyError)

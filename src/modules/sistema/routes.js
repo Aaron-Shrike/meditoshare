@@ -9,9 +9,11 @@ import EditarPerfilPage from '@/modules/sistema/perfil/EditarPerfilPage.vue'
 import PerfilUsuarioPage from '@/modules/sistema/perfil/PerfilUsuarioPage.vue'
 
 import CrearAnuncioPage from '@/modules/sistema/anuncios/CrearAnuncioPage.vue'
+import AnunciosPage from '@/modules/sistema/anuncios/AnunciosPage.vue'
 import SolicitudesPage from '@/modules/sistema/pages/SolicitudesPage.vue'
 
-import AnunciosPage from '@/modules/sistema/anuncios/AnunciosPage.vue'
+import SolicitudesAnuncioPage from '@/modules/sistema/anuncios/SolicitudesAnuncioPage.vue'
+
 
 export const SistemaRoutes = [
     {
@@ -44,7 +46,7 @@ export const SistemaRoutes = [
                 component: EditarPerfilPage
             },
             { 
-                path: 'perfil/:dni', 
+                path: 'perfil/:tipo/:dni', 
                 name: 'PerfilUsuario',
                 component: PerfilUsuarioPage
             },
@@ -57,6 +59,11 @@ export const SistemaRoutes = [
                 path: 'anuncios', 
                 name: 'Anuncios',
                 component: AnunciosPage
+            },
+            { 
+                path: 'solicitudes-anuncio/:titulo-:subtitulo1-:subtitulo2', 
+                name: 'SolicitudesAnuncio',
+                component: SolicitudesAnuncioPage
             },
             { 
                 path: 'solicitudes', 

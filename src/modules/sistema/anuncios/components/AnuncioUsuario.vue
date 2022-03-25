@@ -60,7 +60,7 @@
                     <b-button 
                         block
                         class="boton boton-principal mb-2 mb-lg-0"
-                        :to="{name: 'InicioSistema'}"
+                        :to="{name: 'SolicitudesAnuncio', params: {codigo: datos.codigoAnuncio, titulo: datos.nombre, subtitulo1: datos.presentacion, subtitulo2: datos.concentracion}}"
                     >
                         Ver solicitudes
                     </b-button>
@@ -149,9 +149,9 @@ export default {
         {
             this.$swal({
 				title: mensaje,
-				icon: 'info',
-				confirmButtonText: 'Sí',
-				cancelButtonText: 'Cerrar',
+				icon: 'warning',
+				confirmButtonText: 'Finalizar',
+				cancelButtonText: 'Cancelar',
                 showCancelButton: true,
 			}).then((result) => {
                 if (result.isConfirmed) {

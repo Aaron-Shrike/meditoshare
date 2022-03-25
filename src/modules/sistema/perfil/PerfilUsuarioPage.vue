@@ -59,7 +59,14 @@ export default {
         ...mapState('autenticacion', ['usuario']),
     },
     beforeMount(){
-        this.ObtenerDatosSolicitante()
+        if(this.$route.params.tipo == 'solicitante')
+        {
+            this.ObtenerDatosSolicitante()
+        }
+        if(this.$route.params.tipo == 'donante')
+        {
+            this.ObtenerDatosDonante()
+        }
     },
     methods: {
         ObtenerDatosSolicitante()
@@ -70,6 +77,33 @@ export default {
             }
 
             axios.post('/api/obtener-perfil-solicitante', datos)
+                .then((respuesta) => 
+                {
+                    let data = respuesta.data
+
+                    if(respuesta.status == 200 && typeof data.error === 'undefined')
+                    {
+                        this.datosSolicitante = data
+                        this.efectoCargando = false
+                    }
+                    else
+                    {
+                        this.$router.push({ name: "ErrorSistema"})
+                    }
+                })
+                .catch(() => 
+                {
+                    this.$router.push({ name: "ErrorSistema"})
+                })
+        },
+        ObtenerDatosDonante()
+        {
+            let datos = {
+                dniUsuario: this.usuario.dni,
+                dniDonante: this.$route.params.dni
+            }
+
+            axios.post('/api/obtener-perfil-donante', datos)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data
