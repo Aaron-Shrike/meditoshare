@@ -43,13 +43,6 @@
                     </b-col>
                 </b-row>
             </b-card-text>
-
-            <!-- <b-list-group flush>
-                <b-list-group-item>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                </b-list-group-item>
-            </b-list-group> -->
         </b-card-body>
 
         <b-card-footer class="px-3 py-2">
@@ -106,7 +99,7 @@ export default {
             this.datosSolicitud.dniSolicitante = this.usuario.dni
             this.datosSolicitud.codigoAnuncio = codigo
 
-            axios.post('/api/crear-solicitud', this.datosSolicitud)
+            axios.post('/api/crear-solicitud-anuncio', this.datosSolicitud)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data

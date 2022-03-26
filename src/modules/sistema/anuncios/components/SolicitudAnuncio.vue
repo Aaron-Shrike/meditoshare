@@ -8,6 +8,7 @@
                 <div class="mb-3 d-flex justify-content-between align-items-center">
                     <b-card-title>{{datos.nombre}} {{datos.apellidoPaterno}} {{datos.apellidoMaterno}}</b-card-title>
                     <b-button
+                        v-if="datos.codigoEstado == 1 || datos.codigoEstado == 2"
                         class="boton boton-principal"
                         :to="{name: 'PerfilUsuario', params: {dni: datos.dniSolicitante, tipo: 'solicitante'}}"
                         exact
@@ -33,7 +34,7 @@
                 </b-card-text>
             </b-card-body>
         
-            <b-card-footer v-if="datos.codigoEstado != 3" class="px-3 py-2">
+            <b-card-footer v-if="datos.codigoEstado == 1 || datos.codigoEstado == 2" class="px-3 py-2">
                 <b-row v-if="datos.codigoEstado == 1" cols="1" cols-md="2" align-v="center" align-h="center">
                     <b-col class="d-md-flex justify-content-center">
                         <b-overlay
@@ -56,7 +57,7 @@
                             <b-button 
                                 block
                                 class="boton boton-principal"
-                                @click="MotivoRechazoSolicitud"
+                                @click="ModalRechazoSolicitud"
                             >
                                 Rechazar
                             </b-button>
@@ -74,7 +75,7 @@
                                 :disabled="efectoCargandoBoton"
                                 block
                                 class="boton boton-principal"
-                                @click="CalificarSolicitud"
+                                @click="ModalCalificarSolicitud"
                             >
                                 Marcar como entregado
                             </b-button>
@@ -98,13 +99,6 @@
             hide-header-close
             header-class="justify-content-center"
         >
-            <!-- <template #modal-title>
-                <div class="text-center">
-                    Calificar entrega de<br>
-                    {{$route.params.titulo}} <small>{{$route.params.subtitulo1}}, {{$route.params.subtitulo2}}</small><br>
-                    a {{datos.nombre}} {{datos.apellidoMaterno}} {{datos.apellidoMaterno}}
-                </div>
-            </template> -->
             <template #modal-title>
                 <div class="text-center">
                     Seleccione el motivo de rechazo<br>
@@ -177,6 +171,87 @@
                 </b-button>
             </template>
         </b-modal>
+        <!-- CALIFICAR SOLICITUD -->
+        <b-modal
+            id="modal-prevent-closing"
+            size="md" 
+            centered
+            v-model="mostrarModalCalificar"
+            ref="modal-rechazo"
+            @show="LimpiarFormularioCalificar"
+            @hidden="LimpiarFormularioCalificar"
+            @ok="CalificarSolicitud"
+            no-close-on-backdrop
+            no-close-on-esc
+            hide-header-close
+            header-class="justify-content-center"
+        >
+            <template #modal-title>
+                <div class="text-center">
+                    Calificar entrega de<br>
+                    {{$route.params.titulo}} <small>{{$route.params.subtitulo1}}, {{$route.params.subtitulo2}}</small><br>
+                    a {{datos.nombre}} {{datos.apellidoMaterno}} {{datos.apellidoMaterno}}
+                </div>
+            </template>
+
+            <form ref="form">
+                <b-form-group 
+                    id="input-group-1"
+                >
+                    <b-form-rating id="input-1" v-model="datosCalificar.puntaje"></b-form-rating>
+                    <b-form-invalid-feedback
+                        id="input-1-live-feedback"
+                    >
+                        <div v-if="!$v.datosCalificar.puntaje.required">
+                            Debe ingresar una calificación
+                        </div>
+                    </b-form-invalid-feedback>
+                </b-form-group>
+
+                <b-form-group
+                    id="input-group-2"
+                    label="Comentario:"
+                    label-for="input-2"
+                    class="mb-0"
+                >
+                    <b-form-textarea
+                        id="input-2"
+                        v-model="datosCalificar.comentario"
+                        class="input-formulario"
+                        :state="EstadoValidacionCalificar('comentario')"
+                        placeholder="Motivo"
+                    ></b-form-textarea>
+                    <b-form-invalid-feedback
+                        id="input-2-live-feedback"
+                    >
+                        <div v-if="!$v.datosCalificar.comentario.required">
+                            Debe ingresar un comentario
+                        </div>
+                        <div v-if="!$v.datosCalificar.comentario.mixLength">
+                            Comentario muy corto
+                        </div>
+                        <div v-if="!$v.datosCalificar.comentario.maxLength">
+                            Comentario demasiado largo
+                        </div>
+                    </b-form-invalid-feedback>
+                </b-form-group>
+            </form>
+
+            <template #modal-footer="{ ok, cancel }">
+                <b-overlay
+                    :show="efectoCargandoBotonModal"
+                    rounded
+                    opacity="0.6"
+                >
+                    <b-button class="boton-principal" @click="ok()">
+                        Calificar
+                    </b-button>
+                </b-overlay>
+                <b-button variant="danger" @click="cancel()">
+                    Cancelar
+                </b-button>
+            </template>
+        </b-modal>
     </div>
 </template>
 
@@ -190,6 +265,7 @@ export default {
         efectoCargandoBoton: false,
         efectoCargandoBotonModal: false,
         mostrarModalRechazo: false,
+        mostrarModalCalificar: false,
         opcionesMotivo: [
             { text: 'No cuenta con receta', value: 'No cuenta con receta' },
             { text: 'No cuenta con diagnóstico', value: 'No cuenta con diagnóstico' },
@@ -204,7 +280,7 @@ export default {
             dniSolicitante: '',
             motivo: '',
         },
-        datosEntrega: {
+        datosCalificar: {
             codigoAnuncio: '',
             dniSolicitante: '',
             puntaje: '',
@@ -213,10 +289,6 @@ export default {
 	}),
     props: ['datos'],
     methods: {
-        LimpiarValidacionOtro()
-        {
-            this.$v.motivoOtro.$reset();
-        },
         EstadoValidacionRechazo(name) 
 		{
 			const { $dirty, $error } = this.$v.datosRechazo[name];
@@ -227,9 +299,9 @@ export default {
 			const { $dirty, $error } = this.$v.motivoOtro;
 			return $dirty ? !$error : null;
 		},
-        EstadoValidacionEntrega(name) 
+        EstadoValidacionCalificar(name) 
 		{
-			const { $dirty, $error } = this.$v.datosEntrega[name];
+			const { $dirty, $error } = this.$v.datosCalificar[name];
 			return $dirty ? !$error : null;
 		},
         ConfirmarAprobarSolicitud()
@@ -267,7 +339,7 @@ export default {
                     this.efectoCargandoBoton = false
                 });
         },
-        MotivoRechazoSolicitud()
+        ModalRechazoSolicitud()
         {
             this.mostrarModalRechazo = true
         },
@@ -304,6 +376,7 @@ export default {
                         {
                             this.MensajeDeExito("La solicitud fue rechazada.")
                             this.LimpiarFormularioRechazo()
+                            this.mostrarModalRechazo = false
                         }
                         else
                         {
@@ -319,6 +392,10 @@ export default {
                     });
             }
         },
+        LimpiarValidacionOtro()
+        {
+            this.$v.motivoOtro.$reset();
+        },
         LimpiarFormularioRechazo()
         {
             this.datosRechazo = {
@@ -330,9 +407,61 @@ export default {
             this.$v.datosRechazo.$reset()
             this.$v.motivoOtro.$reset()
         },
-        CalificarSolicitud()
+        ModalCalificarSolicitud()
         {
-            
+            this.mostrarModalCalificar = true
+        },
+        CalificarSolicitud(bvModalEvt)
+        {
+            bvModalEvt.preventDefault()
+
+            this.$v.datosCalificar.$touch();
+
+			if(!this.$v.datosCalificar.$anyError)
+			{ 
+                let datos = {
+                    dniSolicitante: this.datos.dniSolicitante,
+                    codigoAnuncio: this.datos.codigoAnuncio,
+                    puntaje: this.datosCalificar.puntaje,
+                    comentario: this.datosCalificar.comentario,
+                }
+
+                this.efectoCargandoBotonModal = true
+
+                axios.post('/api/calificar-solicitud-anuncio', datos)
+                    .then((respuesta) => 
+                    {
+                        let data = respuesta.data
+
+                        if(respuesta.status == 200 && typeof data.error === 'undefined')
+                        {
+                            this.MensajeDeExito("La solicitud fue calificada.")
+                            this.LimpiarFormularioCalificar()
+                            this.mostrarModalCalificar = false
+                        }
+                        else
+                        {
+                            this.MensajeDeError();
+                        }
+                    })
+                    .catch(() => 
+                    {
+                        this.MensajeDeError();
+                    })
+                    .finally(() => {
+                        this.efectoCargandoBotonModal = false
+                    });
+            }
+        },
+        LimpiarFormularioCalificar()
+        {
+            this.datosCalificar = {
+                codigoAnuncio: '',
+                dniSolicitante: '',
+                puntaje: '',
+                comentario: '',
+            }
+            this.$v.datosCalificar.$reset()
         },
         MensajeDeError(mensaje = 'Error al conectar al servidor.')
 		{
@@ -376,6 +505,16 @@ export default {
             minLength: minLength(3),
             maxLength: maxLength(70)
         },
+		datosCalificar: {
+			puntaje: {
+				required,
+			},
+			comentario: {
+				required,
+                minLength: minLength(3),
+                maxLength: maxLength(70)
+			},
+		},
 	},
 }
 </script>

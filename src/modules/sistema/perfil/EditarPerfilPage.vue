@@ -494,7 +494,7 @@ export default {
 
                 let usuario = this.datosUsuario;
 
-                axios.post('/api/editar-usuario', usuario)
+                axios.post('/api/modificar-usuario/'+this.usuario.dni, usuario)
                     .then((respuesta) => 
                     {
                         let data = respuesta.data
@@ -521,7 +521,10 @@ export default {
 		},
         ObtenerDatosUsuario()
         {
-            axios.post('/api/obtener-datos-usuario', this.usuario.dni)
+            let datos = {
+                dni: this.usuario.dni
+            }
+            axios.post('/api/obtener-usuario', datos)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data

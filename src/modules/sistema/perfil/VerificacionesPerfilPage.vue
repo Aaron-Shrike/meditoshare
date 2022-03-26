@@ -20,7 +20,7 @@
                     </b-col>
                 </b-row>
                 <b-row align-h="center" align-v="center">
-                    <b-col class="d-md-flex justify-content-center">
+                    <!-- <b-col class="d-md-flex justify-content-center">
                         <div>
                             <b-button
                                 block
@@ -30,7 +30,7 @@
                                 Guardar cambios
                             </b-button>
                         </div>
-                    </b-col>
+                    </b-col> -->
                     
                     <b-col class="d-md-flex justify-content-center">
                         <div>
@@ -39,7 +39,7 @@
                                 class="boton boton-principal mt-2"
                                 :to="{name: 'Perfil'}"
                             >
-                                Cancelar
+                                Regresar
                             </b-button>
                         </div>
                     </b-col>

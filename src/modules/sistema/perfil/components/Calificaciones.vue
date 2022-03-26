@@ -78,7 +78,7 @@ export default {
                     if(respuesta.status == 200 && data.calificaciones.length != 0)
                     {
                         this.lista = data.calificaciones
-                        this.calificacionPromedio = data.calificacionPromedio
+                        this.calificacionPromedio = data.puntajePromedio
                         this.MostrarEstrellas()
                     }
                     else

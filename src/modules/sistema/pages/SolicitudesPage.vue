@@ -31,46 +31,46 @@ export default {
     data: () =>  ({
         mensajeError: '',
 		lista: [
-            {
-                codigoAnuncio: '1',
-                nombre: 'Clorfenamina',
-                descripcion: 'asdasdasdasdasd',
-                concentracion: '100mg',
-                presentacion: 'tabletas',
-                cantidad: '20',
-                requiereReceta: 1,
-                requiereDiagnostico: 1,
-                fechaVencimiento: '2022-11-10',
-                formatoFechaVencimiento: '10/11/2022',
-                fechaAnuncio: '2022-03-02',
-                formatoFechaAnuncio: '02/03/2022',
-                departamento: 'Lambayeque',
-                distrito: 'Chiclayo',
+            // {
+            //     codigoAnuncio: '1',
+            //     nombre: 'Clorfenamina',
+            //     descripcion: 'asdasdasdasdasd',
+            //     concentracion: '100mg',
+            //     presentacion: 'tabletas',
+            //     cantidad: '20',
+            //     requiereReceta: 1,
+            //     requiereDiagnostico: 1,
+            //     fechaVencimiento: '2022-11-10',
+            //     formatoFechaVencimiento: '10/11/2022',
+            //     fechaAnuncio: '2022-03-02',
+            //     formatoFechaAnuncio: '02/03/2022',
+            //     departamento: 'Lambayeque',
+            //     distrito: 'Chiclayo',
                 
-                dniDonante: '12345672',
-                codigoEstado: '2',
-                motivo: 'asd'
-            },
-            {
-                codigoAnuncio: '2',
-                nombre: 'Paracetamol',
-                descripcion: 'asdasdasdasdasd',
-                concentracion: '50mg',
-                presentacion: 'tabletas',
-                cantidad: '10',
-                requiereReceta: 1,
-                requiereDiagnostico: 0,
-                fechaVencimiento: '2022-11-11',
-                formatoFechaVencimiento: '11/11/2022',
-                fechaAnuncio: '2022-02-20',
-                formatoFechaAnuncio: '20/02/2022',
-                departamento: 'Lambayeque',
-                distrito: 'Chiclayo',
+            //     dniDonante: '12345672',
+            //     codigoEstado: '2',
+            //     motivo: 'asd'
+            // },
+            // {
+            //     codigoAnuncio: '2',
+            //     nombre: 'Paracetamol',
+            //     descripcion: 'asdasdasdasdasd',
+            //     concentracion: '50mg',
+            //     presentacion: 'tabletas',
+            //     cantidad: '10',
+            //     requiereReceta: 1,
+            //     requiereDiagnostico: 0,
+            //     fechaVencimiento: '2022-11-11',
+            //     formatoFechaVencimiento: '11/11/2022',
+            //     fechaAnuncio: '2022-02-20',
+            //     formatoFechaAnuncio: '20/02/2022',
+            //     departamento: 'Lambayeque',
+            //     distrito: 'Chiclayo',
 
-                dniDonante: '12345672',
-                codigoEstado: '3',
-                motivo: 'Baja calificacion'
-            },
+            //     dniDonante: '12345672',
+            //     codigoEstado: '3',
+            //     motivo: 'Baja calificacion'
+            // },
         ],
 	}),
     components: {
@@ -88,7 +88,7 @@ export default {
             let datos = {
                 dni: this.usuario.dni
             }
-            axios.post('/api/obtener-anuncios', datos)
+            axios.post('/api/obtener-solicitudes', datos)
                 .then((respuesta) => 
                 {
                     let data = respuesta.data
@@ -99,7 +99,7 @@ export default {
                     }
                     else
                     {
-                        this.mensajeError = "No tiene anuncios registrados."
+                        this.mensajeError = "No tiene solicitudes."
                     }
                 })
                 .catch(() => 
