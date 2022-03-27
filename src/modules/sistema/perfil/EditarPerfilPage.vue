@@ -11,7 +11,7 @@
                         <h1 class="titulo-formulario mb-5">Modificar datos</h1>
                         <h2 class="mb-4">{{usuario.nombre}} {{usuario.apellidoPaterno}} {{usuario.apellidoMaterno}}</h2>
                         <p class="mb-0"><b>DNI:</b> {{usuario.dni}}</p>
-                        <p class="mb-4"><b>Fecha de nacimiento:</b> {{usuario.formatoFechaNacimiento}}</p>
+                        <p class="mb-4"><b>Fecha de nacimiento:</b> {{usuario.formatoFecha}}</p>
                     </div>
                     <b-form @submit.prevent="EnviarDatosUsuario">
                         <b-row cols="1" cols-lg="2">

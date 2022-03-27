@@ -14,6 +14,18 @@
                 <calificacion :datos="datos"></calificacion>
             </b-col>
         </b-row>
+        <div :class="{'ocultar-cargando': noHayPaginas}">
+            <div 
+                v-infinite-scroll="SiguientePagina" 
+                infinite-scroll-disabled="noHayPaginas" 
+                infinite-scroll-distance="10"
+                infinite-scroll-throttle-delay="400"
+            >
+                <div class="d-flex justify-content-center mb-3">
+                    <b-spinner label="Cargando..."></b-spinner>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -29,6 +41,8 @@ export default {
         estrellasVacias: 0,
         estrellaMedia: false,
         calificacionPromedio: '0',
+        noHayPaginas: false,
+        pagina: '1',
 		lista: [
             // {
             //     dniSolicitante: '12345678',
@@ -60,30 +74,42 @@ export default {
         Calificacion,
     },
     beforeMount() {
-        this.ObtenerDatos()
         this.MostrarEstrellas()
     },
     methods: {
+        SiguientePagina() 
+        {
+            this.ObtenerDatos()
+        },
         ObtenerDatos()
         {
             let datos = {
                 dniSolicitante: this.$route.params.dni,
             }
 
-            axios.post('/api/obtener-calificaciones-solicitante', datos)
+            axios.post('/api/obtener-calificaciones-solicitante?pagina='+this.pagina, datos)
                 .then((respuesta) => 
                 {
-                    let data = respuesta.data
+                    let dataCalificaciones = respuesta.data.solicitudes.calificaciones
+                    let paginaActual = respuesta.data.pagina
+                    let totalPaginas = respuesta.data.totalPaginas
 
-                    if(respuesta.status == 200 && data.calificaciones.length != 0)
+                    if(respuesta.status == 200 && dataCalificaciones.length != 0)
                     {
-                        this.lista = data.calificaciones
-                        this.calificacionPromedio = data.puntajePromedio
+                        this.lista = this.lista.concat(dataCalificaciones)
+                        this.calificacionPromedio = respuesta.data.solicitudes.puntajePromedio
+                        this.pagina++
+                        if(paginaActual == totalPaginas)
+                        {
+                            this.noHayPaginas = true
+                        }
                         this.MostrarEstrellas()
                     }
                     else
                     {
                         this.mensajeError = "No tiene calificaciones."
+                        this.lista = []
+                        this.noHayPaginas = true
                     }
                 })
                 .catch(() => 

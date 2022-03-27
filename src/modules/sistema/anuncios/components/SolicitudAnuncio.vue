@@ -8,7 +8,7 @@
                 <div class="mb-3 d-flex justify-content-between align-items-center">
                     <b-card-title>{{datos.nombre}} {{datos.apellidoPaterno}} {{datos.apellidoMaterno}}</b-card-title>
                     <b-button
-                        v-if="datos.codigoEstado == 1 || datos.codigoEstado == 2"
+                        v-if="codigoEstadoOff == 1 || codigoEstadoOff == 2"
                         class="boton boton-principal"
                         :to="{name: 'PerfilUsuario', params: {dni: datos.dniSolicitante, tipo: 'solicitante'}}"
                         exact
@@ -24,18 +24,18 @@
                                 <b-icon icon="calendar2-event"></b-icon> Recibida el: {{datos.formatoFechaSolicitud}}
                             </p>
                             <p class="mb-0">
-                                Estado de la solicitud: {{datos.estado}}
+                                Estado de la solicitud: {{estadoOff}}
                             </p>
-                            <p v-if="datos.motivo != undefined" class="mb-0">
-                                Motivo: {{datos.motivo}}
+                            <p v-if="motivoOff != undefined" class="mb-0">
+                                Motivo: {{motivoOff}}
                             </p>
                         </b-col>
                     </b-row>
                 </b-card-text>
             </b-card-body>
         
-            <b-card-footer v-if="datos.codigoEstado == 1 || datos.codigoEstado == 2" class="px-3 py-2">
-                <b-row v-if="datos.codigoEstado == 1" cols="1" cols-md="2" align-v="center" align-h="center">
+            <b-card-footer v-if="codigoEstadoOff == 1 || codigoEstadoOff == 2" class="px-3 py-2">
+                <b-row v-if="codigoEstadoOff == 1" cols="1" cols-md="2" align-v="center" align-h="center">
                     <b-col class="d-md-flex justify-content-center">
                         <b-overlay
                             :show="efectoCargandoBoton"
@@ -64,7 +64,7 @@
                         </div>
                     </b-col>
                 </b-row>
-                <b-row v-if="datos.codigoEstado == 2" cols="1" align-v="center" align-h="center">
+                <b-row v-if="codigoEstadoOff == 2" cols="1" align-v="center" align-h="center">
                     <b-col class="d-md-flex justify-content-center">
                         <b-overlay
                             :show="efectoCargandoBoton"
@@ -266,6 +266,9 @@ export default {
         efectoCargandoBotonModal: false,
         mostrarModalRechazo: false,
         mostrarModalCalificar: false,
+        codigoEstadoOff: '',
+        estadoOff: '',
+        motivoOff: '',
         opcionesMotivo: [
             { text: 'No cuenta con receta', value: 'No cuenta con receta' },
             { text: 'No cuenta con diagnóstico', value: 'No cuenta con diagnóstico' },
@@ -288,6 +291,11 @@ export default {
         }
 	}),
     props: ['datos'],
+    beforeMount(){
+        this.codigoEstadoOff = this.datos.codigoEstado
+        this.estadoOff = this.datos.estado
+        this.motivoOff = this.datos.motivo
+    },
     methods: {
         EstadoValidacionRechazo(name) 
 		{
@@ -325,6 +333,7 @@ export default {
                     if(respuesta.status == 200 && typeof data.error === 'undefined')
                     {
                         this.MensajeDeExito("La solicitud fue aprobada.")
+                        this.codigoEstadoOff = 2
                     }
                     else
                     {
@@ -375,6 +384,10 @@ export default {
                         if(respuesta.status == 200 && typeof data.error === 'undefined')
                         {
                             this.MensajeDeExito("La solicitud fue rechazada.")
+                            this.codigoEstadoOff = 3
+                            this.estadoOff = "Rechazada"
+                            this.motivoOff = datos.motivo
+
                             this.LimpiarFormularioRechazo()
                             this.mostrarModalRechazo = false
                         }
@@ -436,6 +449,9 @@ export default {
                         if(respuesta.status == 200 && typeof data.error === 'undefined')
                         {
                             this.MensajeDeExito("La solicitud fue calificada.")
+                            this.codigoEstadoOff = 4
+                            this.$router.go(-1)
+
                             this.LimpiarFormularioCalificar()
                             this.mostrarModalCalificar = false
                         }

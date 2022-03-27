@@ -32,7 +32,7 @@
                     </b-button>
                     <b-button
                         class="boton-principal"
-                        @click="EliminarReceta(data.item.codigoReceta, data.item.urlReceta)"
+                        @click="ConfirmarEliminarReceta(data.item.codigoReceta, data.item.urlReceta)"
                     >
                         Borrar
                     </b-button>
@@ -262,6 +262,7 @@ export default {
                             this.datos.push(nuevaReceta)
                             this.MensajeDeExito("Su receta se registro correctamente.")
                             this.LimpiarFormulario()
+                            this.mostrarModal = false
 
 
                             // Hide the modal manually
@@ -282,6 +283,10 @@ export default {
                         this.efectoCargandoBoton = false
                     });
 			}
+        },
+        ConfirmarEliminarReceta(codigo, url)
+        {
+            this.MensajeDeAviso("Desea borrar su receta.", codigo, url)
         },
         EliminarReceta(codigo, url)
         {
@@ -328,6 +333,20 @@ export default {
             }
             this.$v.datosReceta.$reset()
         },
+        MensajeDeAviso(mensaje, codigo, url)
+        {
+            this.$swal({
+				title: mensaje,
+				icon: 'warning',
+				confirmButtonText: 'Borrar',
+				cancelButtonText: 'Cancelar',
+                showCancelButton: true,
+			}).then((result) => {
+                if (result.isConfirmed) {
+                    this.EliminarReceta(codigo, url)
+                }
+            })
+		},
         MensajeDeError(mensaje = 'Error al conectar al servidor.')
 		{
 			this.$swal({

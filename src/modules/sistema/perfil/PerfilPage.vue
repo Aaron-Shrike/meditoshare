@@ -5,7 +5,7 @@
                 <h1 class="mb-5">Mi perfil</h1>
                 <h2 class="mb-4">{{usuario.nombre}} {{usuario.apellidoPaterno}} {{usuario.apellidoMaterno}}</h2>
                 <p class="mb-0"><b>DNI:</b> {{usuario.dni}}</p>
-                <p class="mb-4"><b>Fecha de nacimiento:</b> {{usuario.formatoFechaNacimiento}}</p>
+                <p class="mb-4"><b>Fecha de nacimiento:</b> {{usuario.formatoFecha}}</p>
             </div>
             <b-row>
                 <b-col>

@@ -38,6 +38,11 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 //Vuelidate
 Vue.use(Vuelidate)
 
+//scroll infinito
+// register globally
+var infiniteScroll =  require('vue-infinite-scroll');
+Vue.use(infiniteScroll)
+
 new Vue({
   router,
   store,

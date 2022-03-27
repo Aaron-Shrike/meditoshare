@@ -3,11 +3,29 @@
         <b-navbar toggleable="md" type="dark" class="barra-navegacion">
             <b-navbar-toggle v-b-toggle.sidebar-backdrop class="icono-menu d-md-none" target="none"></b-navbar-toggle>
 
+            <b-navbar-nav class="contenedor-busqueda mx-auto d-md-none">
+                <b-nav-form @submit.prevent="RealizarBusqueda">
+                    <b-form-input 
+                        v-model="textoBuscar"
+                        class="mr-2 input-formulario wrap-nowrap" 
+                        placeholder="Buscar"
+                    ></b-form-input>
+                    <b-button 
+                        size="sm" 
+                        class="my-2 my-sm-0" 
+                        type="submit"
+                    >
+                        Buscar
+                    </b-button>
+                </b-nav-form>
+            </b-navbar-nav>
+
             <b-navbar-brand :to="{name: 'InicioSistema'}" class="ml-4">MediToShare</b-navbar-brand>
 
             <b-collapse class="d-md-none" id="nav-collapse" is-nav>
                 <b-navbar-nav class="mx-auto">
-                    <b-nav-form @submit="RealizarBusqueda">
+                    <!-- <b-nav-form @submit.prevent="RealizarBusqueda" @EventoRealizarBusqueda=""> -->
+                    <b-nav-form @click.prevent="RealizarBusqueda">
                         <b-form-input 
                             v-model="textoBuscar"
                             class="mr-2 input-formulario" 
@@ -51,8 +69,8 @@
             backdrop
             shadow
         >
-            <div class="px-3 py-2">
-                <b-list-group>
+            <div class="py-2">
+                <b-list-group flush>
                     <b-list-group-item :to="{name: 'Perfil'}">
                         Mi perfil
                     </b-list-group-item>
@@ -90,9 +108,14 @@ export default {
     },
     methods: {
         ...mapMutations('autenticacion', ['EditarCerrarSesion']),
+        ...mapMutations('sistema', ['EditarBusqueda']),
         RealizarBusqueda()
         {
-            
+            this.EditarBusqueda(this.textoBuscar)
+
+            if(this.$route.name != 'InicioSistema'){
+                this.$router.push({ name: "InicioSistema"})
+            }
         },
         CerrarSesion()
         {
@@ -105,6 +128,20 @@ export default {
 <style>
     .barra-navegacion{
         background-color: var(--color-principal);
+
+    }
+    .contenedor-busqueda{
+        order: 2;
+        margin-top: 8px;
+    }
+    @media (min-width: 561px) {
+        .contenedor-busqueda{
+            order: unset;
+            margin-top: 0;
+        }
+    }
+    .contenedor-busqueda form.form-inline{
+        flex-wrap: nowrap;
     }
     .icono-menu{
         display: block !important;

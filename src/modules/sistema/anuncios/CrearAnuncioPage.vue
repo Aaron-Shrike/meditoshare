@@ -175,7 +175,7 @@
 
                                 <b-form-group
                                     id="input-group-7"
-                                    label="Diagnistico:"
+                                    label="Diagnóstico:"
                                     label-for="input-7"
                                 >
                                     <b-form-checkbox 
@@ -186,7 +186,7 @@
                                         switch
                                         size="lg"
                                     >
-                                        Requiere diagnostico
+                                        Requiere diagnóstico
                                     </b-form-checkbox>
                                     <b-form-invalid-feedback
                                         id="input-7-live-feedback"
@@ -203,7 +203,7 @@
                             <b-col cols-sm="6">
                                 <b-form-group
                                     id="input-group-8"
-                                    label="Descripción(opcional):"
+                                    label="Descripción (opcional):"
                                     label-for="input-8"
                                 >
                                     <b-form-textarea
@@ -242,7 +242,7 @@
                                     </b-button>
                                 </b-overlay>
                             </b-col>
-                            <b-col class="d-md-flex justify-content-center">
+                            <!-- <b-col class="d-md-flex justify-content-center">
                                 <div>
                                     <b-button
                                         block
@@ -252,7 +252,7 @@
                                         Cancelar
                                     </b-button>
                                 </div>
-                            </b-col>
+                            </b-col> -->
                         </b-row>
                     </b-form>
                 </b-card-body>

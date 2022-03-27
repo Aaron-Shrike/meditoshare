@@ -49,7 +49,7 @@
             <b-row cols="1" cols-lg="3" align-v="center" align-h="center">
                 <b-col v-if="datos.activo == 1 && anuncioActivo == true">
                     <p v-if="datos.solicitudes > 0" class="mb-1 mb-lg-0">
-                        Tiene {{datos.solicitudes}} solicitudes. x aún están pendientes.
+                        Tiene {{datos.solicitudes}} solicitudes. <span v-if="datos.solicitudesPendientes > 0">{{datos.solicitudesPendientes}} aún está(n) pendiente(s).</span>
                     </p>
                     <p v-else class="mb-1 mb-lg-0">Aún no tiene solicitudes de contacto.</p>
                 </b-col>
@@ -95,7 +95,6 @@ export default {
     data: () =>  ({
         efectoCargandoBoton: false,
         anuncioActivo: null,
-        // anuncioFinalizado: false,
 	}),
     props: ['datos'],
     mounted(){

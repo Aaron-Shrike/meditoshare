@@ -18,6 +18,18 @@
                 </b-col>
             </b-row>
         </b-container>
+        <div :class="{'ocultar-cargando': noHayPaginas}">
+            <div 
+                v-infinite-scroll="SiguientePagina" 
+                infinite-scroll-disabled="noHayPaginas" 
+                infinite-scroll-distance="10"
+                infinite-scroll-throttle-delay="400"
+            >
+                <div class="d-flex justify-content-center mb-3">
+                    <b-spinner label="Cargando..."></b-spinner>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -30,6 +42,8 @@ export default {
     name: "AnunciosUsuario",
     data: () =>  ({
         mensajeError: '',
+        noHayPaginas: false,
+        pagina: '1',
 		lista: [
             // {
             //     codigoAnuncio: '1',
@@ -75,27 +89,40 @@ export default {
     computed:{
         ...mapState('autenticacion', ['usuario']),
     },
-    beforeMount() {
-        this.ObtenerDatos()
+    beforeMount(){
+        this.lista = []
     },
     methods: {
+        SiguientePagina() 
+        {
+            this.ObtenerDatos()
+        },
         ObtenerDatos()
         {
             let datos = {
                 dni: this.usuario.dni
             }
-            axios.post('/api/obtener-anuncios', datos)
+            axios.post('/api/obtener-anuncios-usuario?pagina='+this.pagina, datos)
                 .then((respuesta) => 
                 {
-                    let data = respuesta.data
+                    let dataAnuncios = respuesta.data.anuncios
+                    let paginaActual = respuesta.data.pagina
+                    let totalPaginas = respuesta.data.totalPaginas
 
-                    if(respuesta.status == 200 && data.length != 0)
+                    if(respuesta.status == 200 && dataAnuncios.length != 0)
                     {
-                        this.lista = data
+                        this.lista = this.lista.concat(dataAnuncios)
+                        this.pagina++
+                        if(paginaActual == totalPaginas)
+                        {
+                            this.noHayPaginas = true
+                        }
                     }
                     else
                     {
                         this.mensajeError = "No tiene anuncios registrados."
+                        this.lista = []
+                        this.noHayPaginas = true
                     }
                 })
                 .catch(() => 

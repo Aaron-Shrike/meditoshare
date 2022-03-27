@@ -9,7 +9,7 @@
                     <h1 class="mb-5">Perfil del usuario</h1>
                     <h2 class="mb-4">{{datosSolicitante.nombre}} {{datosSolicitante.apellidoPaterno}} {{datosSolicitante.apellidoMaterno}}</h2>
                     <p class="mb-0"><b>DNI:</b> {{datosSolicitante.dni}}</p>
-                    <p class="mb-4"><b>Fecha de nacimiento:</b> {{datosSolicitante.formatoFechaNacimiento}}</p>
+                    <p class="mb-4"><b>Fecha de nacimiento:</b> {{datosSolicitante.formatoFecha}}</p>
                 </div>
                 <b-row>
                     <b-col>

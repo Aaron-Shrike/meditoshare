@@ -32,7 +32,7 @@
                     </b-button>
                     <b-button
                         class="boton-principal"
-                        @click="EliminarDiagnostico(data.item.codigoDiagnostico, data.item.urlDiagnostico)"
+                        @click="ConfirmarEliminarDiagnostico(data.item.codigoDiagnostico, data.item.urlDiagnostico)"
                     >
                         Borrar
                     </b-button>
@@ -264,6 +264,7 @@ export default {
                             this.datos.push(nuevoDiagnostico)
                             this.MensajeDeExito("Su diagnostico se registro correctamente.")
                             this.LimpiarFormulario()
+                            this.mostrarModal = false
 
 
                             // Hide the modal manually
@@ -284,6 +285,10 @@ export default {
                         this.efectoCargandoBoton = false
                     });
 			}
+        },
+        ConfirmarEliminarDiagnostico(codigo, url)
+        {
+            this.MensajeDeAviso("Desea borrar su diagnóstico.", codigo, url)
         },
         EliminarDiagnostico(codigo, url)
         {
@@ -330,6 +335,20 @@ export default {
             }
             this.$v.datosDiagnostico.$reset()
         },
+        MensajeDeAviso(mensaje, codigo)
+        {
+            this.$swal({
+				title: mensaje,
+				icon: 'warning',
+				confirmButtonText: 'Borrar',
+				cancelButtonText: 'Cancelar',
+                showCancelButton: true,
+			}).then((result) => {
+                if (result.isConfirmed) {
+                    this.EliminarDiagnostico(codigo)
+                }
+            })
+		},
         MensajeDeError(mensaje = 'Error al conectar al servidor.')
 		{
 			this.$swal({

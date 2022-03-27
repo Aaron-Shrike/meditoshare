@@ -35,6 +35,19 @@
                 </b-row>
             </b-container>
         </section>
+        <div :class="{'ocultar-cargando': noHayPaginas}">
+            <div 
+                v-infinite-scroll="SiguientePagina" 
+                infinite-scroll-disabled="noHayPaginas" 
+                infinite-scroll-distance="10"
+                infinite-scroll-throttle-delay="400"
+            >
+                <!-- <p class="mb-0 text-center">Cargando...</p> -->
+                <div class="d-flex justify-content-center mb-3">
+                    <b-spinner label="Cargando..."></b-spinner>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -45,8 +58,10 @@ import { mapState } from 'vuex'
 export default {
     name: "InicioSistema",
     data: () =>  ({
-        formaOrdenar: null,
         mensajeError: '',
+        formaOrdenar: '1',
+        noHayPaginas: false,
+        pagina: '1',
         arregloFormaOrden: [
             {value: '1', text: 'Más reciente'},
             {value: '2', text: 'Más antiguo'},
@@ -56,38 +71,38 @@ export default {
             {value: '6', text: 'No requiere diagnostico'},
         ],
 		lista: [
-            {
-                codigoAnuncio: '1',
-                nombre: 'Clorfenamina2',
-                descripcion: 'asdasdasdasdasd',
-                concentracion: '100mg',
-                presentacion: 'tabletas',
-                cantidad: '20',
-                requiereReceta: 1,
-                requiereDiagnostico: 1,
-                fechaVencimiento: '2022-11-10',
-                formatoFechaVencimiento: '10/11/2022',
-                fechaAnuncio: '2022-03-02',
-                formatoFechaAnuncio: '02/03/2022',
-                departamento: 'Lambayeque',
-                distrito: 'Chiclayo',
-            },
-            {
-                codigoAnuncio: '2',
-                nombre: 'Paracetamol',
-                descripcion: 'asdasdasdasdasd',
-                concentracion: '50mg',
-                presentacion: 'tabletas',
-                cantidad: '10',
-                requiereReceta: 1,
-                requiereDiagnostico: 0,
-                fechaVencimiento: '2022-11-11',
-                formatoFechaVencimiento: '11/11/2022',
-                fechaAnuncio: '2022-02-20',
-                formatoFechaAnuncio: '20/02/2022',
-                departamento: 'Lambayeque',
-                distrito: 'Chiclayo',
-            },
+            // {
+            //     codigoAnuncio: '1',
+            //     nombre: 'Clorfenamina2',
+            //     descripcion: 'asdasdasdasdasd',
+            //     concentracion: '100mg',
+            //     presentacion: 'tabletas',
+            //     cantidad: '20',
+            //     requiereReceta: 1,
+            //     requiereDiagnostico: 1,
+            //     fechaVencimiento: '2022-11-10',
+            //     formatoFechaVencimiento: '10/11/2022',
+            //     fechaAnuncio: '2022-03-02',
+            //     formatoFechaAnuncio: '02/03/2022',
+            //     departamento: 'Lambayeque',
+            //     distrito: 'Chiclayo',
+            // },
+            // {
+            //     codigoAnuncio: '2',
+            //     nombre: 'Paracetamol',
+            //     descripcion: 'asdasdasdasdasd',
+            //     concentracion: '50mg',
+            //     presentacion: 'tabletas',
+            //     cantidad: '10',
+            //     requiereReceta: 1,
+            //     requiereDiagnostico: 0,
+            //     fechaVencimiento: '2022-11-11',
+            //     formatoFechaVencimiento: '11/11/2022',
+            //     fechaAnuncio: '2022-02-20',
+            //     formatoFechaAnuncio: '20/02/2022',
+            //     departamento: 'Lambayeque',
+            //     distrito: 'Chiclayo',
+            // },
         ],
 	}),
     components: {
@@ -98,34 +113,21 @@ export default {
         ...mapState('sistema', ['busqueda']),
     },
     beforeMount() {
-        this.ObtenerDatos()
+        this.lista = []
+    },
+    watch: {
+        // busqueda: function(newValue, oldValue) {
+        busqueda: function() {
+            // console.log(newValue, oldValue)
+            // if(newValue != oldValue || this.lista.length == 0)
+            // {
+                this.LimpiarBusquedaAnuncios()
+            // }
+        }
     },
     methods: {
-        ObtenerDatos()
+        SiguientePagina() 
         {
-            axios.get('/api/obtener-anuncios')
-                .then((respuesta) => 
-                {
-                    let data = respuesta.data
-
-                    if(respuesta.status == 200 && data.length != 0)
-                    {
-                        this.lista = data
-                    }
-                    else
-                    {
-                        this.mensajeError = "No hay anuncios."
-                        this.lista = []
-                    }
-                })
-                .catch(() => 
-                {
-                    this.mensajeError = "Error al conectar al servidor."
-                })
-        },
-        OrdenarPor()
-        {
-            console.log(this.formaOrdenar)
             switch(this.formaOrdenar){
                 case '1': this.ObtenerDatos(); break;
                 case '2': this.AnunciosFechaAscendente(); break;
@@ -133,24 +135,71 @@ export default {
                 case '4': this.AnunciosRequiereReceta(0); break;
                 case '5': this.AnunciosRequiereDiagnostico(1); break;
                 case '6': this.AnunciosRequiereDiagnostico(0); break;
-                default: this.ObtenerDatos(); break;
             }
         },
-        AnunciosFechaAscendente()
+        ObtenerDatos()
         {
-            axios.get('/api/obtener-anuncios-ascendente')
+            axios.get('/api/obtener-anuncios?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
                 {
-                    let data = respuesta.data
+                    let dataAnuncios = respuesta.data.anuncios
+                    let paginaActual = respuesta.data.pagina
+                    let totalPaginas = respuesta.data.totalPaginas
 
-                    if(respuesta.status == 200 && data.length != 0)
+                    if(respuesta.status == 200 && dataAnuncios.length != 0)
                     {
-                        this.lista = data
+                        this.lista = this.lista.concat(dataAnuncios)
+                        this.pagina++
+                        if(paginaActual == totalPaginas)
+                        {
+                            this.noHayPaginas = true
+                        }
                     }
                     else
                     {
                         this.mensajeError = "No hay anuncios."
                         this.lista = []
+                        this.noHayPaginas = true
+                    }
+                })
+                .catch(() => 
+                {
+                    this.mensajeError = "Error al conectar al servidor."
+                })
+        },
+        LimpiarBusquedaAnuncios()
+        {
+            this.pagina = '1'
+            this.noHayPaginas = false
+            this.lista = []
+        },
+        OrdenarPor()
+        {
+            this.LimpiarBusquedaAnuncios()
+        },
+        AnunciosFechaAscendente()
+        {
+            axios.get('/api/obtener-anuncios-ascendente/?pagina='+this.pagina+"&busqueda="+this.busqueda)
+                .then((respuesta) => 
+                {
+                    let dataAnuncios = respuesta.data.anuncios
+                    let paginaActual = respuesta.data.pagina
+                    let totalPaginas = respuesta.data.totalPaginas
+
+                    if(respuesta.status == 200 && dataAnuncios.length != 0)
+                    {
+                        this.lista = this.lista.concat(dataAnuncios)
+                        this.pagina++
+                        if(paginaActual == totalPaginas)
+                        {
+                            this.noHayPaginas = true
+                        }
+                    }
+                    else
+                    {
+                        this.mensajeError = "No hay anuncios."
+                        this.lista = []
+                        this.noHayPaginas = true
                     }
                 })
                 .catch(() => 
@@ -160,19 +209,27 @@ export default {
         },
         AnunciosRequiereReceta(requiere)
         {
-            axios.get('/api/obtener-anuncios-requiere-receta/' + requiere)
+            axios.get('/api/obtener-anuncios-requiere-receta/' + requiere + '?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
                 {
-                    let data = respuesta.data
+                    let dataAnuncios = respuesta.data.anuncios
+                    let paginaActual = respuesta.data.pagina
+                    let totalPaginas = respuesta.data.totalPaginas
 
-                    if(respuesta.status == 200 && data.length != 0)
+                    if(respuesta.status == 200 && dataAnuncios.length != 0)
                     {
-                        this.lista = data
+                        this.lista = this.lista.concat(dataAnuncios)
+                        this.pagina++
+                        if(paginaActual == totalPaginas)
+                        {
+                            this.noHayPaginas = true
+                        }
                     }
                     else
                     {
                         this.mensajeError = "No hay anuncios."
                         this.lista = []
+                        this.noHayPaginas = true
                     }
                 })
                 .catch(() => 
@@ -182,19 +239,27 @@ export default {
         },
         AnunciosRequiereDiagnostico(requiere)
         {
-            axios.get('/api/obtener-anuncios-requiere-diagnostico/' + requiere)
+            axios.get('/api/obtener-anuncios-requiere-diagnostico/' + requiere + '?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
                 {
-                    let data = respuesta.data
+                    let dataAnuncios = respuesta.data.anuncios
+                    let paginaActual = respuesta.data.pagina
+                    let totalPaginas = respuesta.data.totalPaginas
 
-                    if(respuesta.status == 200 && data.length != 0)
+                    if(respuesta.status == 200 && dataAnuncios.length != 0)
                     {
-                        this.lista = data
+                        this.lista = this.lista.concat(dataAnuncios)
+                        this.pagina++
+                        if(paginaActual == totalPaginas)
+                        {
+                            this.noHayPaginas = true
+                        }
                     }
                     else
                     {
                         this.mensajeError = "No hay anuncios."
                         this.lista = []
+                        this.noHayPaginas = true
                     }
                 })
                 .catch(() => 
@@ -215,5 +280,8 @@ export default {
     }
     .input-ordenar-por{
         max-width: 220px;
+    }
+    .ocultar-cargando{
+        display: none;
     }
 </style>

@@ -6,10 +6,10 @@
                 <p  class="mensaje-error">* {{mensajeError}} *</p>
                 <b-button
                     class="boton boton-principal"
-                    :to="{name: 'CrearAnuncio'}"
+                    :to="{name: 'InicioSistema'}"
                     exact
                 >
-                    Nuevo Anuncio
+                    Solicitar anuncio
                 </b-button>
             </div>
             <b-row cols="1">
@@ -18,6 +18,18 @@
                 </b-col>
             </b-row>
         </b-container>
+        <div :class="{'ocultar-cargando': noHayPaginas}">
+            <div 
+                v-infinite-scroll="SiguientePagina" 
+                infinite-scroll-disabled="noHayPaginas" 
+                infinite-scroll-distance="10"
+                infinite-scroll-throttle-delay="400"
+            >
+                <div class="d-flex justify-content-center mb-3">
+                    <b-spinner label="Cargando..."></b-spinner>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -30,6 +42,8 @@ export default {
     name: "SolicitudesUsuario",
     data: () =>  ({
         mensajeError: '',
+        noHayPaginas: false,
+        pagina: '1',
 		lista: [
             // {
             //     codigoAnuncio: '1',
@@ -79,27 +93,37 @@ export default {
     computed:{
         ...mapState('autenticacion', ['usuario']),
     },
-    beforeMount() {
-        this.ObtenerDatos()
-    },
     methods: {
+        SiguientePagina() 
+        {
+            this.ObtenerDatos()
+        },
         ObtenerDatos()
         {
             let datos = {
                 dni: this.usuario.dni
             }
-            axios.post('/api/obtener-solicitudes', datos)
+            axios.post('/api/obtener-solicitudes?pagina='+this.pagina, datos)
                 .then((respuesta) => 
                 {
-                    let data = respuesta.data
+                    let dataSolicitudes = respuesta.data.solicitudes
+                    let paginaActual = respuesta.data.pagina
+                    let totalPaginas = respuesta.data.totalPaginas
 
-                    if(respuesta.status == 200 && data.length != 0)
+                    if(respuesta.status == 200 && dataSolicitudes.length != 0)
                     {
-                        this.lista = data
+                        this.lista = this.lista.concat(dataSolicitudes)
+                        this.pagina++
+                        if(paginaActual == totalPaginas)
+                        {
+                            this.noHayPaginas = true
+                        }
                     }
                     else
                     {
                         this.mensajeError = "No tiene solicitudes."
+                        this.lista = []
+                        this.noHayPaginas = true
                     }
                 })
                 .catch(() => 
