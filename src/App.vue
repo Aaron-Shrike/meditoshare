@@ -53,24 +53,24 @@
     }
 
     h1 {
-        font-size: 4.8px;
+        font-size: 48px;
     }
     h2 {
-        font-size: 3.6px;
+        font-size: 36px;
     }
     h3 {
-        font-size: 3.2px;
+        font-size: 32px;
     }
     h4 {
-        font-size: 2.8px;
+        font-size: 28px;
     }
 
     h5 {
-        font-size: 2.4px;
+        font-size: 24px;
     }
 
     h6{
-        font-size: 2px;
+        font-size: 20px;
     }
 
     img {
