@@ -158,7 +158,8 @@
     }
 
     .custom-select.input-formulario,
-    .form-control.input-formulario{
+    .form-group .input-formulario,
+    .input-group .input-formulario{
         padding: 0.375rem 1.2rem;
         border: 1px solid var(--color-inputs);
         border-radius: var(--redondeado-1);
