@@ -38,7 +38,7 @@
         box-sizing: inherit;
     }
     body { 
-        font-size: 1.6rem;
+        font-size: 16px;
         background-color: var(--color-bg-principal) !important;
     }
 
@@ -53,24 +53,24 @@
     }
 
     h1 {
-        font-size: 4.8rem;
+        font-size: 4.8px;
     }
     h2 {
-        font-size: 3.6rem;
+        font-size: 3.6px;
     }
     h3 {
-        font-size: 3.2rem;
+        font-size: 3.2px;
     }
     h4 {
-        font-size: 2.8rem;
+        font-size: 2.8px;
     }
 
     h5 {
-        font-size: 2.4rem;
+        font-size: 2.4px;
     }
 
     h6{
-        font-size: 2rem;
+        font-size: 2px;
     }
 
     img {
