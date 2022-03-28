@@ -295,7 +295,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators'
 import axios from 'axios'
 
@@ -380,6 +380,7 @@ export default {
         this.CargarDistritos()
     },
 	methods: {
+        ...mapMutations('autenticacion', ['EditarIniciarSesion']),
 		EstadoValidacion(name) 
 		{
 			const { $dirty, $error } = this.$v.datosUsuario[name];
@@ -524,6 +525,7 @@ export default {
             let datos = {
                 dni: this.usuario.dni
             }
+
             axios.post('/api/obtener-usuario', datos)
                 .then((respuesta) => 
                 {
@@ -533,18 +535,10 @@ export default {
                     {
                         this.EditarIniciarSesion(data)
                     }
-                    else
-                    {
-                        this.MensajeDeError(data.mensaje)
-                    }
                 })
                 .catch(() => 
                 {
-                    this.MensajeDeError()
                 })
-                .finally(() => {
-                    this.efectoCargandoBoton = false
-                });
         },
 		MensajeDeError(mensaje = 'Error al conectar al servidor.')
 		{

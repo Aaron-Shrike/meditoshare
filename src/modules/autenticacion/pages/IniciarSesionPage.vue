@@ -7,103 +7,103 @@
 						tag="div"
 						class="mb-2 card-formulario card-formulario-ancho"
 					>
-						<div>
-							<div class="logo-torsa logo-iniciar-sesion">
-								<img src="@/assets/logo.png" alt="Torsa Perú">
+						<div class="contenedor-logo">
+							<div class="logo">
+								<img src="@/assets/MediToShare_logo.png" alt="MediToShare">
 							</div>
-							<h2 class="titulo-formulario">MediToShare</h2>
-							<b-form @submit.prevent="EnviarDatosIniciarSesion">
-								<b-input-group
-									id="input-group-1"
+						</div>
+						<!-- <h2 class="titulo-formulario">MediToShare</h2> -->
+						<b-form @submit.prevent="EnviarDatosIniciarSesion">
+							<b-input-group
+								id="input-group-1"
+							>
+								<b-input-group-prepend 
+									is-text
+									:class="{
+										'is-invalid': $v.form.dni.$dirty && $v.form.dni.$error,
+										'is-valid': $v.form.dni.$dirty && !$v.form.dni.$invalid
+									}"
 								>
-									<b-input-group-prepend 
-										is-text
-										:class="{
-											'is-invalid': $v.form.dni.$dirty && $v.form.dni.$error,
-											'is-valid': $v.form.dni.$dirty && !$v.form.dni.$invalid
-										}"
-									>
-										<b-icon icon="person-fill"></b-icon>
-									</b-input-group-prepend>
-									<b-form-input
-										id="input-1"
-										v-model="form.dni"
-										class="input-formulario"
-										type="number"
-										:state="EstadoValidacion('dni')"
-										placeholder="DNI"
-									></b-form-input>
-									<b-form-invalid-feedback
-										id="input-1-live-feedback"
-									>
-										<div v-if="!$v.form.dni.required">
-											Debe ingresar su número de DNI
-										</div>
-										<div v-if="!$v.form.dni.minLength">
-											Número de DNI muy corto
-										</div>
-										<div v-if="!$v.form.dni.maxLength">
-											Número de DNI demasiado largo
-										</div>
-									</b-form-invalid-feedback>
-								</b-input-group>
-							
-								<b-input-group 
-									id="input-group-2" 
+									<b-icon icon="person-fill"></b-icon>
+								</b-input-group-prepend>
+								<b-form-input
+									id="input-1"
+									v-model="form.dni"
+									class="input-formulario"
+									type="number"
+									:state="EstadoValidacion('dni')"
+									placeholder="DNI"
+								></b-form-input>
+								<b-form-invalid-feedback
+									id="input-1-live-feedback"
 								>
-									<b-input-group-prepend 
-										is-text
-										:class="{
-											'is-invalid': $v.form.contrasenia.$dirty && $v.form.contrasenia.$error,
-											'is-valid': $v.form.contrasenia.$dirty && !$v.form.contrasenia.$invalid
-										}"
-									>
-										<b-icon icon="lock-fill"></b-icon>
-									</b-input-group-prepend>
-									<b-form-input
-										id="input-2"
-										v-model="form.contrasenia"
-										class="input-formulario"
-										type="password"
-										:state="EstadoValidacion('contrasenia')"
-										placeholder="Contraseña"
-									></b-form-input>
-									<b-form-invalid-feedback
-										id="input-1-live-feedback"
-										
-									>
-										<div v-if="!$v.form.contrasenia.required">
-											Debe ingresar su contraseña
-										</div>
-									</b-form-invalid-feedback>
-								</b-input-group>
-							
-								<b-overlay
-									:show="efectoCargandoBoton"
-									rounded
-									opacity="0.6"
-									class="d-block"
+									<div v-if="!$v.form.dni.required">
+										Debe ingresar su número de DNI
+									</div>
+									<div v-if="!$v.form.dni.minLength">
+										Número de DNI muy corto
+									</div>
+									<div v-if="!$v.form.dni.maxLength">
+										Número de DNI demasiado largo
+									</div>
+								</b-form-invalid-feedback>
+							</b-input-group>
+						
+							<b-input-group 
+								id="input-group-2" 
+							>
+								<b-input-group-prepend 
+									is-text
+									:class="{
+										'is-invalid': $v.form.contrasenia.$dirty && $v.form.contrasenia.$error,
+										'is-valid': $v.form.contrasenia.$dirty && !$v.form.contrasenia.$invalid
+									}"
 								>
-									<b-button 
-										:disabled="efectoCargandoBoton"
-										block 
-										type="submit" 
-										class="boton boton-principal mt-2"
-									>
-										Iniciar Sesión
-									</b-button>
-								</b-overlay>
-							</b-form>
-							<p class="subtitulo-formulario mt-3 mb-0">¿No estás registrado?</p>
-							<div class="d-flex">
-								<b-button
-									:to="{name: 'CrearCuenta'}"
-									variant="link"
-									class="boton mx-auto"
+									<b-icon icon="lock-fill"></b-icon>
+								</b-input-group-prepend>
+								<b-form-input
+									id="input-2"
+									v-model="form.contrasenia"
+									class="input-formulario"
+									type="password"
+									:state="EstadoValidacion('contrasenia')"
+									placeholder="Contraseña"
+								></b-form-input>
+								<b-form-invalid-feedback
+									id="input-1-live-feedback"
+									
 								>
-									Crear Cuenta
+									<div v-if="!$v.form.contrasenia.required">
+										Debe ingresar su contraseña
+									</div>
+								</b-form-invalid-feedback>
+							</b-input-group>
+						
+							<b-overlay
+								:show="efectoCargandoBoton"
+								rounded
+								opacity="0.6"
+								class="d-block"
+							>
+								<b-button 
+									:disabled="efectoCargandoBoton"
+									block 
+									type="submit" 
+									class="boton boton-principal mt-2"
+								>
+									Iniciar Sesión
 								</b-button>
-							</div>
+							</b-overlay>
+						</b-form>
+						<p class="subtitulo-formulario mt-3 mb-0">¿No estás registrado?</p>
+						<div class="d-flex">
+							<b-button
+								:to="{name: 'CrearCuenta'}"
+								variant="link"
+								class="boton mx-auto"
+							>
+								Crear Cuenta
+							</b-button>
 						</div>
 					</b-card>
 				</b-col>
@@ -121,8 +121,8 @@ export default {
 	data: () =>  ({
 		efectoCargandoBoton: false,
 		form: {
-			dni: '12345672',
-			contrasenia: '12345678',
+			dni: '',
+			contrasenia: '',
 		},
 	}),
 	validations: {
@@ -153,11 +153,11 @@ export default {
 
 			if(!this.$v.form.$anyError)
 			{ 
+				this.efectoCargandoBoton = true
+				
 				axios.get('/sanctum/csrf-cookie')
 					.then(() => 
 					{
-						this.efectoCargandoBoton = true
-
 						axios.post('/api/iniciar-sesion', this.form)
 							.then((respuesta) => 
 							{
@@ -185,6 +185,9 @@ export default {
 					{
 						this.MensajeDeError()
 					})
+					.finally(() => {
+						this.efectoCargandoBoton = false
+					});
 			}
 		},
 		MensajeDeError(mensaje = 'Error al conectar al servidor.')
@@ -210,9 +213,9 @@ export default {
 		height: 100%;
 	}
 
-	.logo-iniciar-sesion{
-		max-width: 450px;
-		margin: 0 auto;
+	.contenedor-logo{
+		display: flex;
+		justify-content: center;
 	}
 
 	.card.card-formulario,

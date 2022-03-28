@@ -14,23 +14,20 @@
                 <calificacion :datos="datos"></calificacion>
             </b-col>
         </b-row>
+
         <div :class="{'ocultar-cargando': noHayPaginas}">
-            <div 
-                v-infinite-scroll="SiguientePagina" 
-                infinite-scroll-disabled="noHayPaginas" 
-                infinite-scroll-distance="10"
-                infinite-scroll-throttle-delay="400"
+            <infinite-loading
+                @infinite="SiguientePagina"
+                :identifier="idInfinito"
             >
-                <div class="d-flex justify-content-center mb-3">
-                    <b-spinner label="Cargando..."></b-spinner>
-                </div>
-            </div>
+            </infinite-loading>
         </div>
     </section>
 </template>
 
 <script>
 import Calificacion from '@/modules/sistema/perfil/components/Calificacion.vue'
+import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios'
 
 export default {
@@ -42,6 +39,7 @@ export default {
         estrellaMedia: false,
         calificacionPromedio: '0',
         noHayPaginas: false,
+        idInfinito: '1',
         pagina: '1',
 		lista: [
             // {
@@ -72,16 +70,17 @@ export default {
 	}),
     components: {
         Calificacion,
+        InfiniteLoading,
     },
     beforeMount() {
         this.MostrarEstrellas()
     },
     methods: {
-        SiguientePagina() 
+        SiguientePagina($state) 
         {
-            this.ObtenerDatos()
+            this.ObtenerDatos($state)
         },
-        ObtenerDatos()
+        ObtenerDatos($state)
         {
             let datos = {
                 dniSolicitante: this.$route.params.dni,
@@ -102,11 +101,14 @@ export default {
                         if(paginaActual == totalPaginas)
                         {
                             this.noHayPaginas = true
+                            $state.complete();
                         }
                         this.MostrarEstrellas()
+                        $state.loaded();
                     }
                     else
                     {
+                        $state.complete();
                         this.mensajeError = "No tiene calificaciones."
                         this.lista = []
                         this.noHayPaginas = true

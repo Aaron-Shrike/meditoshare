@@ -35,23 +35,22 @@
                 </b-row>
             </b-container>
         </section>
+        
         <div :class="{'ocultar-cargando': noHayPaginas}">
-            <div 
-                v-infinite-scroll="SiguientePagina" 
-                infinite-scroll-disabled="noHayPaginas" 
-                infinite-scroll-distance="10"
-                infinite-scroll-throttle-delay="400"
+            <infinite-loading
+                @infinite="SiguientePagina"
+                :identifier="idInfinito"
             >
-                <!-- <p class="mb-0 text-center">Cargando...</p> -->
-                <div class="d-flex justify-content-center mb-3">
-                    <b-spinner label="Cargando..."></b-spinner>
-                </div>
-            </div>
+                <!-- <div slot="spinner">Loading...</div>
+                <div slot="no-more">No more message</div>
+                <div slot="no-results">No results message</div> -->
+            </infinite-loading>
         </div>
     </div>
 </template>
 <script>
 import AnuncioPublico from '@/modules/sistema/components/AnuncioPublico.vue'
+import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios'
 import { mapState } from 'vuex'
 
@@ -60,6 +59,7 @@ export default {
     data: () =>  ({
         mensajeError: '',
         formaOrdenar: '1',
+        idInfinito: '1',
         noHayPaginas: false,
         pagina: '1',
         arregloFormaOrden: [
@@ -107,6 +107,7 @@ export default {
 	}),
     components: {
         AnuncioPublico,
+        InfiniteLoading,
     },
     computed:{
         ...mapState('autenticacion', ['usuario']),
@@ -126,18 +127,18 @@ export default {
         }
     },
     methods: {
-        SiguientePagina() 
+        SiguientePagina($state) 
         {
             switch(this.formaOrdenar){
-                case '1': this.ObtenerDatos(); break;
-                case '2': this.AnunciosFechaAscendente(); break;
-                case '3': this.AnunciosRequiereReceta(1); break;
-                case '4': this.AnunciosRequiereReceta(0); break;
-                case '5': this.AnunciosRequiereDiagnostico(1); break;
-                case '6': this.AnunciosRequiereDiagnostico(0); break;
+                case '1': this.ObtenerDatos($state); break;
+                case '2': this.AnunciosFechaAscendente($state); break;
+                case '3': this.AnunciosRequiereReceta(1,$state); break;
+                case '4': this.AnunciosRequiereReceta(0,$state); break;
+                case '5': this.AnunciosRequiereDiagnostico(1,$state); break;
+                case '6': this.AnunciosRequiereDiagnostico(0,$state); break;
             }
         },
-        ObtenerDatos()
+        ObtenerDatos($state)
         {
             axios.get('/api/obtener-anuncios?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
@@ -153,10 +154,13 @@ export default {
                         if(paginaActual == totalPaginas)
                         {
                             this.noHayPaginas = true
+                            $state.complete();
                         }
+                        $state.loaded();
                     }
                     else
                     {
+                        $state.complete();
                         this.mensajeError = "No hay anuncios."
                         this.lista = []
                         this.noHayPaginas = true
@@ -171,13 +175,14 @@ export default {
         {
             this.pagina = '1'
             this.noHayPaginas = false
+            this.idInfinito++
             this.lista = []
         },
         OrdenarPor()
         {
             this.LimpiarBusquedaAnuncios()
         },
-        AnunciosFechaAscendente()
+        AnunciosFechaAscendente($state)
         {
             axios.get('/api/obtener-anuncios-ascendente/?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
@@ -193,10 +198,13 @@ export default {
                         if(paginaActual == totalPaginas)
                         {
                             this.noHayPaginas = true
+                            $state.complete();
                         }
+                        $state.loaded();
                     }
                     else
                     {
+                        $state.complete();
                         this.mensajeError = "No hay anuncios."
                         this.lista = []
                         this.noHayPaginas = true
@@ -207,7 +215,7 @@ export default {
                     this.mensajeError = "Error al conectar al servidor."
                 })
         },
-        AnunciosRequiereReceta(requiere)
+        AnunciosRequiereReceta(requiere, $state)
         {
             axios.get('/api/obtener-anuncios-requiere-receta/' + requiere + '?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
@@ -223,10 +231,13 @@ export default {
                         if(paginaActual == totalPaginas)
                         {
                             this.noHayPaginas = true
+                            $state.complete();
                         }
+                        $state.loaded();
                     }
                     else
                     {
+                        $state.complete();
                         this.mensajeError = "No hay anuncios."
                         this.lista = []
                         this.noHayPaginas = true
@@ -237,7 +248,7 @@ export default {
                     this.mensajeError = "Error al conectar al servidor."
                 })
         },
-        AnunciosRequiereDiagnostico(requiere)
+        AnunciosRequiereDiagnostico(requiere, $state)
         {
             axios.get('/api/obtener-anuncios-requiere-diagnostico/' + requiere + '?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
@@ -253,10 +264,13 @@ export default {
                         if(paginaActual == totalPaginas)
                         {
                             this.noHayPaginas = true
+                            $state.complete();
                         }
+                        $state.loaded();
                     }
                     else
                     {
+                        $state.complete();
                         this.mensajeError = "No hay anuncios."
                         this.lista = []
                         this.noHayPaginas = true

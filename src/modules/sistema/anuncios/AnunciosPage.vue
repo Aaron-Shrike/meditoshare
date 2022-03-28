@@ -18,23 +18,20 @@
                 </b-col>
             </b-row>
         </b-container>
+
         <div :class="{'ocultar-cargando': noHayPaginas}">
-            <div 
-                v-infinite-scroll="SiguientePagina" 
-                infinite-scroll-disabled="noHayPaginas" 
-                infinite-scroll-distance="10"
-                infinite-scroll-throttle-delay="400"
+            <infinite-loading
+                @infinite="SiguientePagina"
+                :identifier="idInfinito"
             >
-                <div class="d-flex justify-content-center mb-3">
-                    <b-spinner label="Cargando..."></b-spinner>
-                </div>
-            </div>
+            </infinite-loading>
         </div>
     </section>
 </template>
 
 <script>
 import AnuncioUsuario from '@/modules/sistema/anuncios/components/AnuncioUsuario.vue'
+import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios'
 import { mapState } from 'vuex'
 
@@ -44,6 +41,7 @@ export default {
         mensajeError: '',
         noHayPaginas: false,
         pagina: '1',
+        idInfinito: '1',
 		lista: [
             // {
             //     codigoAnuncio: '1',
@@ -85,6 +83,7 @@ export default {
 	}),
     components: {
         AnuncioUsuario,
+        InfiniteLoading,
     },
     computed:{
         ...mapState('autenticacion', ['usuario']),
@@ -93,11 +92,11 @@ export default {
         this.lista = []
     },
     methods: {
-        SiguientePagina() 
+        SiguientePagina($state) 
         {
-            this.ObtenerDatos()
+            this.ObtenerDatos($state)
         },
-        ObtenerDatos()
+        ObtenerDatos($state)
         {
             let datos = {
                 dni: this.usuario.dni
@@ -116,10 +115,13 @@ export default {
                         if(paginaActual == totalPaginas)
                         {
                             this.noHayPaginas = true
+                            $state.complete();
                         }
+                        $state.loaded();
                     }
                     else
                     {
+                        $state.complete();
                         this.mensajeError = "No tiene anuncios registrados."
                         this.lista = []
                         this.noHayPaginas = true

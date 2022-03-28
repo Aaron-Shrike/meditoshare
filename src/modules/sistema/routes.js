@@ -71,5 +71,8 @@ export const SistemaRoutes = [
                 component: SolicitudesPage
             },
         ],
+        meta: {
+            requiereAutenticacion: true
+        },
     },
 ]

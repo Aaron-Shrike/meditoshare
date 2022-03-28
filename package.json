@@ -19,7 +19,7 @@
     "register-service-worker": "^1.7.2",
     "vue": "^2.6.14",
     "vue-axios": "^3.4.0",
-    "vue-infinite-scroll": "^2.0.2",
+    "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.5.1",
     "vue-sweetalert2": "^5.0.2",
     "vuelidate": "^0.7.7",

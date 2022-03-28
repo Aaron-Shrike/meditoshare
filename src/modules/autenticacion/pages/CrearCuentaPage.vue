@@ -8,9 +8,11 @@
 						class="mb-2 card-formulario"
 					>
 						<b-card-text>
-							<div class="logo-torsa logo-iniciar-sesion">
-								<img src="@/assets/logo.png" alt="Torsa Perú">
-							</div>
+							<div class="contenedor-logo">
+                                <div class="logo">
+                                    <img src="@/assets/MediToShare_logo.png" alt="MediToShare">
+                                </div>
+                            </div>
 							<h2 class="titulo-formulario mb-5">Registro de Usuario</h2>
 							<b-form @submit.prevent="EnviarDatosCrearUsuario">
                                 <b-row cols="1" cols-lg="2" cols-xl="3">

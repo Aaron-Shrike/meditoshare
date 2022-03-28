@@ -71,6 +71,10 @@
         >
             <div class="py-2">
                 <b-list-group flush>
+                    <b-list-group-item :to="{name: 'InicioSistema'}">
+                        Inicio
+                    </b-list-group-item>
+
                     <b-list-group-item :to="{name: 'Perfil'}">
                         Mi perfil
                     </b-list-group-item>

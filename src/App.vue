@@ -6,7 +6,8 @@
 
 <style>
     :root {
-        --fuente-principal: 'Montserrat', sans-serif;
+        /* --fuente-principal: 'Montserrat', sans-serif; */
+        --fuente-principal: 'Poppins', sans-serif;
         --fuente-secundaria: 'Poppins', sans-serif;
 
         --color-bg-principal: #F2F6FA;
