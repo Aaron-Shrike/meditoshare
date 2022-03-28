@@ -5,7 +5,7 @@
 				<b-col cols="12">
 					<b-card
 						tag="div"
-						class="mb-2 card-formulario card-formulario-ancho"
+						class="card-formulario card-formulario-ancho"
 					>
 						<div class="contenedor-logo">
 							<div class="logo">
@@ -206,7 +206,6 @@ export default {
 	.seccion-iniciar-sesion{
 		height: 100vh;
 		min-height: 100vh;
-		padding: 0 0 20px 0;
 	}
 
 	.contenedor-iniciar-sesion{
