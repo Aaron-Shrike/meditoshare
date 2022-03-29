@@ -158,14 +158,20 @@
     }
 
     .custom-select.input-formulario,
-    .form-group .input-formulario,
-    .input-group .input-formulario{
+    .form-group .form-control.input-formulario,
+    .input-group .form-control.input-formulario{
         padding: 0.375rem 1.2rem;
         border: 1px solid var(--color-inputs);
         border-radius: var(--redondeado-1);
         height: 45px;
         font-weight: 600;
         font-size: 16px;
+    }
+    .input-group .form-control.input-formulario.is-invalid{
+        border-color: #dc3545;
+    }
+    .input-group .form-control.input-formulario.is-valid{
+        border-color: #28a745;
     }
     .custom-select.input-formulario::placeholder,
     .form-control.input-formulario::placeholder{
