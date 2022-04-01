@@ -184,7 +184,7 @@ export default {
         },
         AnunciosFechaAscendente($state)
         {
-            axios.get('/api/obtener-anuncios-ascendente/?pagina='+this.pagina+"&busqueda="+this.busqueda)
+            axios.get('/api/obtener-anuncios-ascendente?pagina='+this.pagina+"&busqueda="+this.busqueda)
                 .then((respuesta) => 
                 {
                     let dataAnuncios = respuesta.data.anuncios
