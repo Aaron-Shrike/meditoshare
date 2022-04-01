@@ -135,6 +135,7 @@
                                         :state="EstadoValidacion('cantidad')"
                                         placeholder="Cantidad"
                                         min="1"
+                                        max="100"
                                     ></b-form-input>
                                     <b-form-invalid-feedback
                                         id="input-5-live-feedback"

@@ -10,12 +10,17 @@
         --fuente-principal: 'Poppins', sans-serif;
         --fuente-secundaria: 'Poppins', sans-serif;
 
-        --color-bg-principal: #F2F6FA;
-        --color-principal: #0284c7;
+        --color-bg-principal: #F4F8FB;
+        --color-principal: #181F74;
         --color-principal-rgb: 2, 132, 199;
+        --color-boton-principal: #4A54C6;
+        --color-boton-verde: #17C873;
+        --color-boton-roja: #EA5A47;
+        /* --color-principal: #0284c7; */
         --color-blanco: #ffffff;
         --color-titulo-principal: #29166C;
         --color-subtitulo: #526D94;
+        --color-texto-rojo: #EA5A47;
         --color-inputs: #B1BDCE;
 
         --redondeado-1: 16px;
@@ -88,23 +93,23 @@
     }
     .btn.boton-principal,
     .btn.btn-boton-principal{
-        background-color: var(--color-principal);
-        border-color: var(--color-principal);
+        background-color: var(--color-boton-principal);
+        border-color: var(--color-boton-principal);
         color: #fff;
     }
     .btn.boton-principal:hover,
     .btn.btn-boton-principal:hover{
         opacity: .92;
-        background-color: var(--color-principal);
+        background-color: var(--color-boton-principal);
     }
     .btn.boton-principal:focus,
     .btn.btn-boton-principal:focus{
-        background-color: var(--color-principal);
+        background-color: var(--color-boton-principal);
         box-shadow: 0 0 0 0.2rem rgba(var(--color-principal-rgb), .5);
     }
     .btn.boton-principal:not(:disabled):not(.disabled):active,
     .btn.btn-boton-principal:not(:disabled):not(.disabled):active{
-        background-color: var(--color-principal);
+        background-color: var(--color-boton-principal);
         box-shadow: 0 0 0 0.2rem rgba(var(--color-principal-rgb), .5);
     }
     .btn.boton-principal:not(:disabled):not(.disabled):active:focus,
@@ -113,18 +118,18 @@
     }
 
     .btn.boton-transparente{
-        color: var(--color-principal);
+        color: var(--color-boton-principal);
     }
     .btn.boton-transparente:hover{
         opacity: .92;
-        color: var(--color-principal);
+        color: var(--color-boton-principal);
     }
     .btn.boton-transparente:focus{
-        color: var(--color-principal);
+        color: var(--color-boton-principal);
         box-shadow: none;
     }
     .btn.boton-transparente:not(:disabled):not(.disabled):active{
-        color: var(--color-principal);
+        color: var(--color-boton-principal);
         box-shadow: none;
     }
     .btn.boton-transparente:not(:disabled):not(.disabled):active:focus{

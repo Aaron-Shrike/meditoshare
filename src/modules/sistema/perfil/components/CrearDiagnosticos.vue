@@ -95,6 +95,7 @@
                         :state="EstadoValidacion('archivo')"
                         placeholder="Elija un archivo o suéltelo aquí..."
                         drop-placeholder="Suelta el archivo aquí..."
+                        browse-text="Buscar"
                         accept=".jpg, .jpeg"
                     ></b-form-file>
                     <b-form-invalid-feedback

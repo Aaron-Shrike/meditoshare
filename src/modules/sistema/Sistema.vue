@@ -3,8 +3,8 @@
         <b-navbar toggleable="md" type="dark" class="barra-navegacion">
             <b-navbar-toggle v-b-toggle.sidebar-backdrop class="icono-menu d-md-none" target="none"></b-navbar-toggle>
 
-            <b-navbar-nav class="contenedor-busqueda mx-auto d-md-none">
-                <b-nav-form @submit.prevent="RealizarBusqueda">
+            <b-navbar-nav class="contenedor-busqueda mx-auto d-md-none input-buscar-ancho-100">
+                <b-nav-form @submit.prevent="RealizarBusqueda" class="input-buscar-ancho-100">
                     <b-form-input 
                         v-model="textoBuscar"
                         class="mr-2 input-formulario wrap-nowrap" 
@@ -12,7 +12,7 @@
                     ></b-form-input>
                     <b-button 
                         size="sm" 
-                        class="my-2 my-sm-0" 
+                        class="boton-principal my-2 my-sm-0 " 
                         type="submit"
                     >
                         Buscar
@@ -20,7 +20,7 @@
                 </b-nav-form>
             </b-navbar-nav>
 
-            <b-navbar-brand :to="{name: 'InicioSistema'}" class="ml-4">MediToShare</b-navbar-brand>
+            <b-navbar-brand :to="{name: 'InicioSistema'}" class="ml-4 titulo-barra-navegacion">MediToShare</b-navbar-brand>
 
             <b-collapse class="d-md-none" id="nav-collapse" is-nav>
                 <b-navbar-nav class="mx-auto">
@@ -33,7 +33,7 @@
                         ></b-form-input>
                         <b-button 
                             size="sm" 
-                            class="my-2 my-sm-0" 
+                            class="my-2 my-sm-0 boton-principal" 
                             type="submit"
                         >
                             Buscar
@@ -132,7 +132,9 @@ export default {
 <style>
     .barra-navegacion{
         background-color: var(--color-principal);
-
+    }
+    .titulo-barra-navegacion{
+        font-family: var(--fuente-principal);
     }
     .contenedor-busqueda{
         order: 2;
@@ -146,6 +148,16 @@ export default {
     }
     .contenedor-busqueda form.form-inline{
         flex-wrap: nowrap;
+    }
+    .input-buscar-ancho-100,
+    .input-buscar-ancho-100 form{
+        width: 100%;
+    }
+    @media (min-width: 561px) {
+        .input-buscar-ancho-100,
+        .input-buscar-ancho-100 form{
+            width: unset;
+        }
     }
     .icono-menu{
         display: block !important;
