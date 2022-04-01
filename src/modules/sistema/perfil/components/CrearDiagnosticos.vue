@@ -336,7 +336,7 @@ export default {
             }
             this.$v.datosDiagnostico.$reset()
         },
-        MensajeDeAviso(mensaje, codigo)
+        MensajeDeAviso(mensaje, codigo, url)
         {
             this.$swal({
 				title: mensaje,
@@ -346,7 +346,7 @@ export default {
                 showCancelButton: true,
 			}).then((result) => {
                 if (result.isConfirmed) {
-                    this.EliminarDiagnostico(codigo)
+                    this.EliminarDiagnostico(codigo, url)
                 }
             })
 		},
