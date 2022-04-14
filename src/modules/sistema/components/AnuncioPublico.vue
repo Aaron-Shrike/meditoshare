@@ -57,7 +57,7 @@
                             :disabled="efectoCargandoBoton"
                             block
                             class="boton boton-principal"
-                            @click="SolicitarMedicamento(datos.codigoAnuncio)"
+                            @click="ConfirmarSolicitarMedicamento(datos.codigoAnuncio)"
                         >
                             Solicitar medicamento
                         </b-button>
@@ -80,6 +80,7 @@ export default {
         datosSolicitud: {
             dniSolicitante: '',
             codigoAnuncio: '',
+            urgente: false
         }
 	}),
     props: ['datos'],
@@ -92,6 +93,32 @@ export default {
         }
     },
     methods: {
+        ConfirmarSolicitarMedicamento(codigo)
+        {
+            this.$swal({
+				title: "¿Tipo de Solicitud?",
+				icon: 'question',
+				confirmButtonText: 'Urgente',
+				denyButtonText: 'Normal',
+				cancelButtonText: 'Cancelar',
+                showDenyButton: true,
+                showCancelButton: true,
+                customClass: {
+                    popup: 'alerta-ancha'
+                },
+			}).then((result) => {
+                if (result.isConfirmed) 
+                {
+                    this.datosSolicitud.urgente = true
+                    this.SolicitarMedicamento(codigo)
+                }
+                else if (result.isDenied) 
+                {
+                    this.datosSolicitud.urgente = false
+                    this.SolicitarMedicamento(codigo)
+                }
+            })
+        },
         SolicitarMedicamento(codigo)
         {
             this.efectoCargandoBoton = true

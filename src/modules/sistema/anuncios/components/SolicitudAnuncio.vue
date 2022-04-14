@@ -190,7 +190,7 @@
                 <div class="text-center">
                     Calificar entrega de<br>
                     {{$route.params.titulo}} <small>{{$route.params.subtitulo1}}, {{$route.params.subtitulo2}}</small><br>
-                    a {{datos.nombre}} {{datos.apellidoMaterno}} {{datos.apellidoMaterno}}
+                    a {{datos.nombre}} {{datos.apellidoPaterno}} {{datos.apellidoMaterno}}
                 </div>
             </template>
 
